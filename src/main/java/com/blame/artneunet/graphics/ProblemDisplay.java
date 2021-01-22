@@ -1,7 +1,5 @@
 package com.blame.artneunet.graphics;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -9,14 +7,22 @@ import java.awt.Graphics2D;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import com.blame.artneunet.problemarena.ProblemArena;
+
 @SuppressWarnings("serial")
 public abstract class ProblemDisplay extends JFrame {
 
     protected JPanel jPanel;
+    
 	protected int sizeX;
 	protected int sizeY;
+	
+	protected ProblemArena problemArena;
+	protected int iteration;
 
     public ProblemDisplay(int sizeX, int sizeY) {
+    	this.iteration = 0;
+    	
     	this.sizeX = sizeX;
     	this.sizeY = sizeY;
     	
@@ -33,23 +39,26 @@ public abstract class ProblemDisplay extends JFrame {
         setVisible(true);
 	}
 
-    /**
-     * 
-     */
-    public abstract void paintProblemArenaSituation(Graphics2D g2d);
-    
+	public void setProblemArena(ProblemArena problemArena) {
+		this.problemArena = problemArena;
+	}
+
+	public boolean incrementIteration() {
+		iteration++;
+		return iteration == problemArena.getNumProblemIterations();
+	}
+
     @Override
     public void paint(Graphics g) {
     	super.paint(g);
     	Graphics2D g2d = (Graphics2D) g;
 
-    	g2d.setColor(Color.BLUE);
-    	paintNetworkEntity(g2d);
+    	paintProblemArenaSituation(g2d);
     }
 
     /**
      * 
-     * @param g2d
      */
-	public abstract void paintNetworkEntity(Graphics2D g2d);
+    public abstract void paintProblemArenaSituation(Graphics2D g2d);
+    
 }

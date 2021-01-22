@@ -1,7 +1,14 @@
 package com.blame.artneunet.problemarena;
 
+import java.text.DecimalFormat;
+
 public class Point {
 
+	protected static final DecimalFormat DF = new DecimalFormat();
+	static {
+		DF.setMaximumFractionDigits(2);
+	}
+	
 	protected float x;
 	protected float y;
 	
@@ -37,4 +44,11 @@ public class Point {
 		
 		return (float) Math.sqrt((deltaX * deltaX) + (deltaY * deltaY));
 	}
+
+	@Override
+	public String toString() {
+		return "[" + x + ", " + y + "]";
+	}
+	
+	
 }

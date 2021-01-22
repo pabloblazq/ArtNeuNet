@@ -16,8 +16,8 @@ import com.blame.artneunet.network.Network;
  */
 public class ChaserProblemArena extends ProblemArena {
 
-	protected static final float SIZE_X = 1000f;
-	protected static final float SIZE_Y = 1000f;
+	protected final float sizeX;
+	protected final float sizeY;
 	
 	private Point targetPosition;
 	private Point nextTargetPosition;
@@ -27,12 +27,15 @@ public class ChaserProblemArena extends ProblemArena {
 	private List<List<Point>> positions;
 	private float resultValue;
 	
-	public ChaserProblemArena(Network network) {
+	public ChaserProblemArena(Network network, float sizeX, float sizeY, int numProblemIterations) {
 		
-		initialize(network, 100);
+		initialize(network, numProblemIterations);
 		
-		targetPosition = new Point(random.nextFloat() * SIZE_X, random.nextFloat() * SIZE_Y);
-		netEntityPosition = new Point(random.nextFloat() * SIZE_X, random.nextFloat() * SIZE_Y);
+		this.sizeX = sizeX;
+		this.sizeY = sizeY;
+		
+		targetPosition = new Point(random.nextFloat() * sizeX, random.nextFloat() * sizeY);
+		netEntityPosition = new Point(random.nextFloat() * sizeX, random.nextFloat() * sizeY);
 		
 		positions = new ArrayList<>();
 		positions.add(Arrays.asList(targetPosition, netEntityPosition));
@@ -43,10 +46,10 @@ public class ChaserProblemArena extends ProblemArena {
 		
 		// do it normalizing to 0 .. 1
 		network.setInputLayerValues(Arrays.asList(
-				targetPosition.getX() / SIZE_X,
-				targetPosition.getY() / SIZE_Y,
-				netEntityPosition.getX() / SIZE_X,
-				netEntityPosition.getY() / SIZE_Y));
+				targetPosition.getX() / sizeX,
+				targetPosition.getY() / sizeY,
+				netEntityPosition.getX() / sizeX,
+				netEntityPosition.getY() / sizeY));
 	}
 
 	@Override
@@ -60,32 +63,32 @@ public class ChaserProblemArena extends ProblemArena {
 		// randomize the target movement (-5 : +5)
 		float targetDeltaX = (random.nextFloat() * 10f) - 5f;
 		float targetDeltaY = (random.nextFloat() * 10f) - 5f;
-		nextTargetPosition = Point.calculatePoint(netEntityPosition, targetDeltaX, targetDeltaY);
+		nextTargetPosition = Point.calculatePoint(targetPosition, targetDeltaX, targetDeltaY);
 		
 		controlPositionLimits();
 	}
 
 	protected void controlPositionLimits() {
-		if(nextNetEntityPosition.getX() > SIZE_X - 1) {
-			nextNetEntityPosition.setX(SIZE_X - 1);
+		if(nextNetEntityPosition.getX() > sizeX - 1) {
+			nextNetEntityPosition.setX(sizeX - 1);
 		} else if(nextNetEntityPosition.getX() < 0f) {
 			nextNetEntityPosition.setX(0f);
 		}
 		
-		if(nextNetEntityPosition.getY() > SIZE_Y - 1) {
-			nextNetEntityPosition.setY(SIZE_Y - 1);
+		if(nextNetEntityPosition.getY() > sizeY - 1) {
+			nextNetEntityPosition.setY(sizeY - 1);
 		} else if(nextNetEntityPosition.getY() < 0f) {
 			nextNetEntityPosition.setY(0f);
 		}
 		
-		if(nextTargetPosition.getX() > SIZE_X - 1) {
-			nextTargetPosition.setX(SIZE_X - 1);
+		if(nextTargetPosition.getX() > sizeX - 1) {
+			nextTargetPosition.setX(sizeX - 1);
 		} else if(nextTargetPosition.getX() < 0f) {
 			nextTargetPosition.setX(0f);
 		}
 		
-		if(nextTargetPosition.getX() > SIZE_Y - 1) {
-			nextTargetPosition.setX(SIZE_Y - 1);
+		if(nextTargetPosition.getX() > sizeY - 1) {
+			nextTargetPosition.setX(sizeY - 1);
 		} else if(nextTargetPosition.getY() < 0f) {
 			nextTargetPosition.setY(0f);
 		}

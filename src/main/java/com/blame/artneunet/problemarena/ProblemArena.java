@@ -38,5 +38,8 @@ public abstract class ProblemArena {
 		}
 	}
 
-	
+	public Integer getNumProblemIterations() {
+		return numProblemIterations;
+	}
+
 }
