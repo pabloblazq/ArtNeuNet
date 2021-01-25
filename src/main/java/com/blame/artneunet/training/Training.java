@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.blame.artneunet.network.Network;
-import com.blame.artneunet.network.exception.BuildNetworkException;
 import com.blame.artneunet.problemarena.ProblemArena;
 
 public class Training {
@@ -38,7 +37,7 @@ public class Training {
 	 * @throws BuildNetworkException 
 	 * 
 	 */
-	public void runTraining() throws BuildNetworkException {
+	public void runTraining() {
 		// initial network build
 		List<Network> networkToEvaluateList = new ArrayList<>();
 		for(int i = 0; i < STEP_POPULATION; i++) {

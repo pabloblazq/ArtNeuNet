@@ -38,9 +38,19 @@ public class Point {
 		return new Point(point.x + deltaX, point.y + deltaY);
 	}
 
-	public static float calculateDistance(Point netEntityPosition, Point targetPosition) {
-		double deltaX = (double) (netEntityPosition.getX() - targetPosition.getX());
-		double deltaY = (double) (netEntityPosition.getY() - targetPosition.getY());
+	public static Point calculatePoint(Point fromPoint, Point toPoint, float delta) {
+		float distance = calculateDistance(fromPoint, toPoint);
+		float factor = distance / delta;
+		
+		float deltaX = (toPoint.getX() - fromPoint.getX()) / factor;
+		float deltaY = (toPoint.getY() - fromPoint.getY()) / factor;
+
+		return calculatePoint(fromPoint, deltaX, deltaY);
+	}
+	
+	public static float calculateDistance(Point fromPoint, Point toPoint) {
+		double deltaX = (double) (fromPoint.getX() - toPoint.getX());
+		double deltaY = (double) (fromPoint.getY() - toPoint.getY());
 		
 		return (float) Math.sqrt((deltaX * deltaX) + (deltaY * deltaY));
 	}
@@ -49,6 +59,5 @@ public class Point {
 	public String toString() {
 		return "[" + x + ", " + y + "]";
 	}
-	
-	
+
 }

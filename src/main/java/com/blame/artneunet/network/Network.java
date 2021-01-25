@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import com.blame.artneunet.network.activation.IActivationFunction;
 import com.blame.artneunet.network.activation.IdentityActivationFunction;
 import com.blame.artneunet.network.connection.Connection;
-import com.blame.artneunet.network.exception.BuildNetworkException;
 import com.blame.artneunet.network.neuron.InputNeuron;
 import com.blame.artneunet.network.neuron.OutputNeuron;
 import com.blame.artneunet.network.neuron.ProcessingNeuron;
@@ -30,15 +29,10 @@ public class Network implements Serializable {
 	/**
 	 * 
 	 * @param numOfInputNeurons
-	 * @param numOfOutputNeurons
 	 * @param numOfProcessingNeurons
-	 * @throws BuildNetworkException
+	 * @param numOfOutputNeurons
 	 */
-	public Network(int numOfInputNeurons, int numOfOutputNeurons, List<Integer> numOfProcessingNeurons) throws BuildNetworkException {
-		
-		if(numOfProcessingNeurons.isEmpty()) {
-			throw new BuildNetworkException("no processing layers were indicated");
-		}
+	public Network(int numOfInputNeurons, List<Integer> numOfProcessingNeurons, int numOfOutputNeurons) {
 		
 		processingActivationFunction = new IdentityActivationFunction(); // as default
 		outputActivationFunction = new IdentityActivationFunction(); // as default
@@ -201,10 +195,10 @@ public class Network implements Serializable {
 	 * @return
 	 * @throws BuildNetworkException
 	 */
-	public Network cloneNetwork() throws BuildNetworkException {
+	public Network cloneNetwork() {
 		
 		List<Integer> numOfProcessingNeurons = processingLayerList.stream().map(processingLayer -> processingLayer.size()).collect(Collectors.toList());
-		Network cloneNetwork = new Network(inputLayer.size(), outputLayer.size(), numOfProcessingNeurons);
+		Network cloneNetwork = new Network(inputLayer.size(), numOfProcessingNeurons, outputLayer.size());
 		for(int i = 0; i < this.connectionList.size(); i++) {
 			Float weight = this.connectionList.get(i).getWeight();
 			if(weight != null) {

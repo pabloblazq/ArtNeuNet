@@ -6,14 +6,13 @@ import java.util.List;
 import org.junit.Test;
 
 import com.blame.artneunet.network.Network;
-import com.blame.artneunet.network.exception.BuildNetworkException;
 
 public class NetworkTest {
 
 	@Test
-	public void testNetwork() throws BuildNetworkException {
+	public void testNetwork() {
 		
-		Network network = new Network(2, 2, Arrays.asList(4));
+		Network network = new Network(2, Arrays.asList(4), 2);
 		network.randomizeConnections();
 		network.setInputLayerValues(Arrays.asList(0.2f, 0.8f));
 		network.processNetwork();

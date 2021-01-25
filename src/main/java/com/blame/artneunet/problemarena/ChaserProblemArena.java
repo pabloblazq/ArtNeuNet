@@ -19,13 +19,17 @@ public class ChaserProblemArena extends ProblemArena {
 	protected final float sizeX;
 	protected final float sizeY;
 	
-	private Point targetPosition;
-	private Point nextTargetPosition;
-	private Point netEntityPosition;
-	private Point nextNetEntityPosition;
+	protected Point targetPosition;
+	protected Point nextTargetPosition;
+	protected Point netEntityPosition;
+	protected Point nextNetEntityPosition;
 	
-	private List<List<Point>> positions;
-	private float resultValue;
+	protected int targetDirectionMaxIters;
+	protected int targetDirectionIter;
+	protected Point targetTempDestination;
+	
+	protected List<List<Point>> positions;
+	protected float resultValue;
 	
 	public ChaserProblemArena(Network network, float sizeX, float sizeY, int numProblemIterations) {
 		
@@ -37,8 +41,11 @@ public class ChaserProblemArena extends ProblemArena {
 		targetPosition = new Point(random.nextFloat() * sizeX, random.nextFloat() * sizeY);
 		netEntityPosition = new Point(random.nextFloat() * sizeX, random.nextFloat() * sizeY);
 		
+		targetDirectionMaxIters = numProblemIterations / 5;
+		targetTempDestination = new Point(random.nextFloat() * sizeX, random.nextFloat() * sizeY);
+
 		positions = new ArrayList<>();
-		positions.add(Arrays.asList(targetPosition, netEntityPosition));
+		positions.add(Arrays.asList(targetPosition, netEntityPosition, targetTempDestination));
 	}
 
 	@Override
@@ -56,16 +63,14 @@ public class ChaserProblemArena extends ProblemArena {
 	protected void processOutputLayer() {
 		// get the next net-entity position from the network output layer
 		List<Float> outputLayer = network.getOutputLayerValues();
-		float netEntityDeltaX = outputLayer.get(0) * 5f;
-		float netEntityDeltaY = outputLayer.get(1) * 5f;
+		float netEntityDeltaX = outputLayer.get(0) * 20f;
+		float netEntityDeltaY = outputLayer.get(1) * 20f;
 		nextNetEntityPosition = Point.calculatePoint(netEntityPosition, netEntityDeltaX, netEntityDeltaY);
 
-		// randomize the target movement (-5 : +5)
-		float targetDeltaX = (random.nextFloat() * 10f) - 5f;
-		float targetDeltaY = (random.nextFloat() * 10f) - 5f;
-		nextTargetPosition = Point.calculatePoint(targetPosition, targetDeltaX, targetDeltaY);
+		// move towards the target temp destination
+		nextTargetPosition = Point.calculatePoint(targetPosition, targetTempDestination, 5f);
 		
-		controlPositionLimits();
+		//controlPositionLimits();
 	}
 
 	protected void controlPositionLimits() {
@@ -99,7 +104,12 @@ public class ChaserProblemArena extends ProblemArena {
 		targetPosition = nextTargetPosition;
 		netEntityPosition = nextNetEntityPosition;
 		
-		positions.add(Arrays.asList(targetPosition, netEntityPosition));
+		positions.add(Arrays.asList(targetPosition, netEntityPosition, targetTempDestination));
+		
+		targetDirectionIter++;
+		if(targetDirectionIter % targetDirectionMaxIters == 0) {
+			targetTempDestination = new Point(random.nextFloat() * sizeX, random.nextFloat() * sizeY);
+		}
 	}
 
 	public List<List<Point>> getPositions() {

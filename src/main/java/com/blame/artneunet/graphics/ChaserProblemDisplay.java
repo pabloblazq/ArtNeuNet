@@ -22,12 +22,17 @@ public class ChaserProblemDisplay extends ProblemDisplay {
 		// paint target
     	g2d.setColor(Color.RED);
 		Point targetPoint = situation.get(0);
-		g2d.drawOval((int) targetPoint.getX(), (int) targetPoint.getY(), 4, 4);
+		g2d.fillOval((int) targetPoint.getX(), (int) targetPoint.getY(), 4, 4);
 
 		// paint network entity
     	g2d.setColor(Color.BLUE);
 		Point networkEntityPoint = situation.get(1);
-		g2d.drawOval((int) networkEntityPoint.getX(), (int) networkEntityPoint.getY(), 4, 4);
+		g2d.fillOval((int) networkEntityPoint.getX(), (int) networkEntityPoint.getY(), 4, 4);
+		
+		// paint target temp destination
+    	g2d.setColor(Color.GREEN);
+		Point targetTempDestination = situation.get(2);
+		g2d.fillOval((int) targetTempDestination.getX(), (int) targetTempDestination.getY(), 4, 4);
 		
 	}
 
