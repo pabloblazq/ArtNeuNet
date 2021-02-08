@@ -20,7 +20,9 @@ public abstract class ProblemDisplay extends JFrame {
 	protected ProblemArena problemArena;
 	protected int iteration;
 
-    public ProblemDisplay(int sizeX, int sizeY) {
+    public ProblemDisplay(ProblemArena problemArena, int sizeX, int sizeY) {
+    	this.problemArena = problemArena;
+    	
     	this.iteration = 0;
     	
     	this.sizeX = sizeX;
@@ -37,10 +39,6 @@ public abstract class ProblemDisplay extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
-	}
-
-	public void setProblemArena(ProblemArena problemArena) {
-		this.problemArena = problemArena;
 	}
 
 	public boolean incrementIteration() {

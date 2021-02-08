@@ -1,39 +1,37 @@
 package com.blame.artneunet.problemarena;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
 
 import com.blame.artneunet.graphics.ChaserProblemDisplay;
 import com.blame.artneunet.network.Network;
-import com.blame.artneunet.network.activation.SigmoidActivationFunction;
+import com.blame.artneunet.network.NetworkBuilder;
 import com.blame.artneunet.network.activation.TanhActivationFunction;
 
 public class ChaserProblemDisplayTest {
 
-	private static final int DIMENSION_X = 1000;
-	private static final int DIMENSION_Y = 1000;
-	private static final int NUM_PROBLEM_ITERATIONS = 200;
-
 	@Test
 	public void testChaserProblemDisplay() throws InterruptedException {
 		
-		Network network = new Network(4, Arrays.asList(2), 2);
-		network.setProcessingActivationFunction(new TanhActivationFunction());
-		network.setOutputActivationFunction(new TanhActivationFunction());
-		network.randomizeConnections();
+		List<Network> networkList = NetworkBuilder.createNetworkBuilder()
+			.setNumberOfInputNeurons(4)
+			.setNumberOfProcessingNeurons(Arrays.asList(2))
+			.setNumberOfOutputNeurons(2)
+			.setProcessingActivationFunctionClass(TanhActivationFunction.class)
+			.setOutputActivationFunctionClass(TanhActivationFunction.class)
+			.buildNetworks(20, true);
 
-		ChaserProblemArena chaserProblemArena = new ChaserProblemArena(network, (float) DIMENSION_X, (float) DIMENSION_Y, NUM_PROBLEM_ITERATIONS);
+		ChaserProblemArena chaserProblemArena = new ChaserProblemArena(networkList);
 		chaserProblemArena.processProblem();
-		float resultValue = chaserProblemArena.calculateResultValue();
-		System.out.println(resultValue);
-		
-		ChaserProblemDisplay chaserProblemDisplay = new ChaserProblemDisplay(DIMENSION_X, DIMENSION_Y);
-		chaserProblemDisplay.setProblemArena(chaserProblemArena);
+
+		ChaserProblemDisplay chaserProblemDisplay = new ChaserProblemDisplay(chaserProblemArena);
 		while(!chaserProblemDisplay.incrementIteration()) {
 			Thread.sleep(100);
 			chaserProblemDisplay.repaint();
 		}
 		Thread.sleep(5000);
 	}
+
 }

@@ -14,8 +14,8 @@ public class NetworkBuilder {
 	protected Class<IActivationFunction> processingActivationFunctionClass;
 	protected Class<IActivationFunction> outputActivationFunctionClass;
 	
-	public NetworkBuilder() {
-		super();
+	public static NetworkBuilder createNetworkBuilder() {
+		return new NetworkBuilder();
 	}
 	
 	public NetworkBuilder setNumberOfInputNeurons(int numberOfInputNeurons) {
@@ -33,13 +33,25 @@ public class NetworkBuilder {
 		return this;
 	}
 
-	public NetworkBuilder setProcessingActivationFunctionClass(Class<IActivationFunction> processingActivationFunctionClass) {
-		this.processingActivationFunctionClass = processingActivationFunctionClass;
+	public int getNumberOfInputNeurons() {
+		return numberOfInputNeurons;
+	}
+
+	public List<Integer> getNumberOfProcessingNeurons() {
+		return numberOfProcessingNeurons;
+	}
+
+	public int getNumberOfOutputNeurons() {
+		return numberOfOutputNeurons;
+	}
+
+	public NetworkBuilder setProcessingActivationFunctionClass(Class<? extends IActivationFunction> processingActivationFunctionClass) {
+		this.processingActivationFunctionClass = (Class<IActivationFunction>) processingActivationFunctionClass;
 		return this;
 	}
 
-	public NetworkBuilder setOutputActivationFunctionClass(Class<IActivationFunction> outputActivationFunctionClass) {
-		this.outputActivationFunctionClass = outputActivationFunctionClass;
+	public NetworkBuilder setOutputActivationFunctionClass(Class<? extends IActivationFunction> outputActivationFunctionClass) {
+		this.outputActivationFunctionClass = (Class<IActivationFunction>) outputActivationFunctionClass;
 		return this;
 	}
 
@@ -66,8 +78,8 @@ public class NetworkBuilder {
 
 		Network network = new Network(numberOfInputNeurons, numberOfProcessingNeurons, numberOfOutputNeurons);
 		try {
-			network.setProcessingActivationFunction(processingActivationFunctionClass.newInstance());
-			network.setOutputActivationFunction(outputActivationFunctionClass.newInstance());
+			network.setProcessingActivationFunction(processingActivationFunctionClass.getConstructor().newInstance());
+			network.setOutputActivationFunction(outputActivationFunctionClass.getConstructor().newInstance());
 		} catch (Exception e) {/*nothing to do*/}
 		
 		if(randomizeConnections) {
@@ -75,5 +87,18 @@ public class NetworkBuilder {
 		}
 		
 		return network;
+	}
+
+	
+	/**
+	 * 
+	 * @param winnerNetwork
+	 * @return
+	 */
+	public Network generateMutatedNetwork(Network winnerNetwork) {
+		
+		Network copyNetwork = winnerNetwork.cloneNetwork();
+		copyNetwork.randomizeConnection();
+		return copyNetwork;
 	}
 }

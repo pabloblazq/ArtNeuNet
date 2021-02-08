@@ -2,66 +2,79 @@ package com.blame.artneunet.training;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.blame.artneunet.network.Network;
+import com.blame.artneunet.network.NetworkBuilder;
 import com.blame.artneunet.problemarena.ProblemArena;
 
 public class Training {
 
-	protected static final int DEFAULT_TRAINING_STEPS = 10;
-	protected static final int STEP_POPULATION = 100;
+	private static final Logger logger = LogManager.getLogger(Training.class);
 	
-	protected int trainingSteps;
+	protected static final int TRAINING_STEPS = 10;
 
-	protected Network baseNetwork;
+	protected static final int INITIAL_POPULATION = 100;
+	protected static final int STEP_NEW_RANDOM_NETWORKS = 10;
+	protected static final int NUM_MUTATED_FROM_WINNER_NETWORK = 20;
+	protected static final int NUM_WINNER_NETWORKS = 5;
 	
-	/**
-	 * 
-	 * @param baseNetwork
-	 */
-	public Training(Network baseNetwork, ProblemArena problemArena) {
-		this.baseNetwork = baseNetwork;
-		
-		trainingSteps = DEFAULT_TRAINING_STEPS;
+	protected NetworkBuilder networkBuilder;
+	protected Class<? extends ProblemArena> problemArenaClass;
+	
+	public Training(NetworkBuilder networkBuilder, Class<? extends ProblemArena> problemArenaClass) {
+		this.networkBuilder = networkBuilder;
+		this.problemArenaClass = problemArenaClass;
 	}
 
-	/**
-	 * 
-	 * @param trainingSteps
-	 */
-	public void setTrainingSteps(int trainingSteps) {
-		this.trainingSteps = trainingSteps;
-	}
-	
-	/**
-	 * @throws BuildNetworkException 
-	 * 
-	 */
-	public void runTraining() {
+	public void processTraining() {
+		logTrainingStart();
 		// initial network build
-		List<Network> networkToEvaluateList = new ArrayList<>();
-		for(int i = 0; i < STEP_POPULATION; i++) {
-			Network network = baseNetwork.cloneNetwork();
-			network.randomizeConnections();
-			networkToEvaluateList.add(network);
-		}
-	
-		// load the initial situation into the input layer 
+		List<Network> networkList = networkBuilder.buildNetworks(INITIAL_POPULATION, true);
 		
 		// iterate the training steps
-		for(int iStep = 0; iStep < trainingSteps; iStep ++) {
-			// run all the networks into the toEvaluate list against the problemArena (same problemArena). this means
-			// running the same pair network-problemArena until exit condition (evaluate the network during a certain amount of steps into the problemArena)
-				// load input layer values with the problemArena situation
-				// run the network
-				// apply the output layer values into the problemArena, and run the Arena step
+		for(int trainingIteration = 0; trainingIteration < TRAINING_STEPS; trainingIteration++) {
+			logger.info("Processing training step {}", trainingIteration);
+			// process the training step
+			TrainingStep trainingStep = new TrainingStep(networkList, problemArenaClass, NUM_WINNER_NETWORKS);
+			List<Network> winnerNetworks = trainingStep.processTrainingStep(problemArenaClass);
 			
-			// evaluate the output layer of all the networks against the reward function
-			
-			// build the next generation: original winner networks, original mutated, new random networks (10/80/10 ??)
-			
-			// load the initial problem situation into the input layer of the next generation
+			// build the next generation: original winner networks, original mutated, new random networks (10/100/10)
+			networkList.clear();
+			networkList.addAll(winnerNetworks);
+			networkList.addAll(generateMutatedNetworks(winnerNetworks));
+			networkList.addAll(networkBuilder.buildNetworks(STEP_NEW_RANDOM_NETWORKS, true));
 		}
+	}
+
+	private void logTrainingStart() {
+		logger.info("Starting training for:");
+		logger.info("  Problem arena: {}", problemArenaClass.getSimpleName());
+		logger.info("  Network population: {} -> w:{} m:{} r:{}", INITIAL_POPULATION, NUM_WINNER_NETWORKS, NUM_MUTATED_FROM_WINNER_NETWORK, STEP_NEW_RANDOM_NETWORKS);
+		logger.info("  Network structure: {}||{}||{}", networkBuilder.getNumberOfInputNeurons(), 
+				networkBuilder.getNumberOfProcessingNeurons().stream().map(i -> i.toString()).collect(Collectors.joining("|")), networkBuilder.getNumberOfOutputNeurons());
+	}
+
+	protected List<Network> generateMutatedNetworks(List<Network> winnerNetworks) {
 		
+		List<Network> mutatedNetworks = new ArrayList<>();
+		for(Network winnerNetwork : winnerNetworks) {
+			mutatedNetworks.addAll(generateMutatedNetworks(winnerNetwork));
+		}
+
+		return mutatedNetworks;
+	}
+
+	protected List<Network> generateMutatedNetworks(Network winnerNetwork) {
+		
+		List<Network> mutatedNetworks = new ArrayList<>();
+		for(int i = 0; i < NUM_MUTATED_FROM_WINNER_NETWORK; i++) {
+			mutatedNetworks.add(networkBuilder.generateMutatedNetwork(winnerNetwork));
+		}
+
+		return mutatedNetworks;
 	}
 }

@@ -144,6 +144,18 @@ public class Network implements Serializable {
 
 	/**
 	 * 
+	 */
+	public void randomizeConnection() {
+		if(random == null) {
+			random = new Random();
+		}
+		
+		int connectionIndex = random.nextInt(connectionList.size());
+		connectionList.get(connectionIndex).setWeight(generateRandomWeight());
+	}
+
+	/**
+	 * 
 	 * @return
 	 */
 	protected float generateRandomWeight() {
@@ -202,11 +214,36 @@ public class Network implements Serializable {
 		for(int i = 0; i < this.connectionList.size(); i++) {
 			Float weight = this.connectionList.get(i).getWeight();
 			if(weight != null) {
-				cloneNetwork.connectionList.get(i).setWeight(new Float(weight));
+				cloneNetwork.connectionList.get(i).setWeight(weight.floatValue());
 			}
 		}
 		
 		return cloneNetwork;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((connectionList == null) ? 0 : connectionList.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Network other = (Network) obj;
+		if (connectionList == null) {
+			if (other.connectionList != null)
+				return false;
+		} else if (!connectionList.equals(other.connectionList))
+			return false;
+		return true;
 	}
 	
 }

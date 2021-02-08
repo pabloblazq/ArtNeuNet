@@ -2,7 +2,9 @@ package com.blame.artneunet.problemarena;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.blame.artneunet.network.Network;
 
@@ -16,111 +18,101 @@ import com.blame.artneunet.network.Network;
  */
 public class ChaserProblemArena extends ProblemArena {
 
-	protected final float sizeX;
-	protected final float sizeY;
+	public static final int DIMENSION_X = 1000;
+	public static final int DIMENSION_Y = 1000;
 	
+	private static final int NUM_PROBLEM_ITERATIONS = 200;
+
 	protected Point targetPosition;
 	protected Point nextTargetPosition;
-	protected Point netEntityPosition;
-	protected Point nextNetEntityPosition;
+	protected Map<Network, Point> positionByNetwork;
 	
 	protected int targetDirectionMaxIters;
 	protected int targetDirectionIter;
 	protected Point targetTempDestination;
 	
-	protected List<List<Point>> positions;
+	protected List<List<Point>> targetPositionHistory;
+	protected List<Map<Network, Point>> positionByNetworkHistory;
 	protected float resultValue;
 	
-	public ChaserProblemArena(Network network, float sizeX, float sizeY, int numProblemIterations) {
+	public ChaserProblemArena(List<Network> networkList) {
+		super(networkList, NUM_PROBLEM_ITERATIONS);
 		
-		initialize(network, numProblemIterations);
+		targetPosition = new Point(random.nextFloat() * DIMENSION_X, random.nextFloat() * DIMENSION_Y);
 		
-		this.sizeX = sizeX;
-		this.sizeY = sizeY;
+		Point initialNetEntityPosition = new Point(random.nextFloat() * DIMENSION_X, random.nextFloat() * DIMENSION_Y);
+		positionByNetwork = new HashMap<>();
+		for(Network network : networkList) {
+			positionByNetwork.put(network, initialNetEntityPosition);
+		}
 		
-		targetPosition = new Point(random.nextFloat() * sizeX, random.nextFloat() * sizeY);
-		netEntityPosition = new Point(random.nextFloat() * sizeX, random.nextFloat() * sizeY);
-		
-		targetDirectionMaxIters = numProblemIterations / 5;
-		targetTempDestination = new Point(random.nextFloat() * sizeX, random.nextFloat() * sizeY);
+		targetDirectionMaxIters = NUM_PROBLEM_ITERATIONS / 5;
+		targetTempDestination = new Point(random.nextFloat() * DIMENSION_X, random.nextFloat() * DIMENSION_Y);
 
-		positions = new ArrayList<>();
-		positions.add(Arrays.asList(targetPosition, netEntityPosition, targetTempDestination));
+		targetPositionHistory = new ArrayList<>();
+		targetPositionHistory.add(Arrays.asList(targetPosition, targetTempDestination));
+		positionByNetworkHistory = new ArrayList<>();
+		positionByNetworkHistory.add(positionByNetwork);
 	}
 
 	@Override
 	protected void loadProblemStatusIntoInputLayer() {
-		
-		// do it normalizing to 0 .. 1
-		network.setInputLayerValues(Arrays.asList(
-				targetPosition.getX() / sizeX,
-				targetPosition.getY() / sizeY,
-				netEntityPosition.getX() / sizeX,
-				netEntityPosition.getY() / sizeY));
-	}
-
-	@Override
-	protected void processOutputLayer() {
-		// get the next net-entity position from the network output layer
-		List<Float> outputLayer = network.getOutputLayerValues();
-		float netEntityDeltaX = outputLayer.get(0) * 20f;
-		float netEntityDeltaY = outputLayer.get(1) * 20f;
-		nextNetEntityPosition = Point.calculatePoint(netEntityPosition, netEntityDeltaX, netEntityDeltaY);
-
-		// move towards the target temp destination
-		nextTargetPosition = Point.calculatePoint(targetPosition, targetTempDestination, 5f);
-		
-		//controlPositionLimits();
-	}
-
-	protected void controlPositionLimits() {
-		if(nextNetEntityPosition.getX() > sizeX - 1) {
-			nextNetEntityPosition.setX(sizeX - 1);
-		} else if(nextNetEntityPosition.getX() < 0f) {
-			nextNetEntityPosition.setX(0f);
-		}
-		
-		if(nextNetEntityPosition.getY() > sizeY - 1) {
-			nextNetEntityPosition.setY(sizeY - 1);
-		} else if(nextNetEntityPosition.getY() < 0f) {
-			nextNetEntityPosition.setY(0f);
-		}
-		
-		if(nextTargetPosition.getX() > sizeX - 1) {
-			nextTargetPosition.setX(sizeX - 1);
-		} else if(nextTargetPosition.getX() < 0f) {
-			nextTargetPosition.setX(0f);
-		}
-		
-		if(nextTargetPosition.getX() > sizeY - 1) {
-			nextTargetPosition.setX(sizeY - 1);
-		} else if(nextTargetPosition.getY() < 0f) {
-			nextTargetPosition.setY(0f);
+		for(Network network : networkList) {
+			Point netEntityPosition = positionByNetwork.get(network);
+			// do it normalizing to 0 .. 1
+			network.setInputLayerValues(Arrays.asList(
+					targetPosition.getX() / DIMENSION_X,
+					targetPosition.getY() / DIMENSION_Y,
+					netEntityPosition.getX() / DIMENSION_X,
+					netEntityPosition.getY() / DIMENSION_Y));
 		}
 	}
 
 	@Override
 	protected void processProblemStep() {
-		targetPosition = nextTargetPosition;
-		netEntityPosition = nextNetEntityPosition;
-		
-		positions.add(Arrays.asList(targetPosition, netEntityPosition, targetTempDestination));
+
+		// process the output layer
+		Map<Network, Point> nextPositionByNetwork = new HashMap<>();
+		for(Network network : networkList) {
+			// get the next net-entity position from the network output layer
+			List<Float> outputLayer = network.getOutputLayerValues();
+			float netEntityDeltaX = outputLayer.get(0) * 20f;
+			float netEntityDeltaY = outputLayer.get(1) * 20f;
+			Point nextPosition = Point.calculatePoint(positionByNetwork.get(network), netEntityDeltaX, netEntityDeltaY);
+			nextPositionByNetwork.put(network, nextPosition);
+		}
+
+		// store the history
+		targetPositionHistory.add(Arrays.asList(targetPosition, targetTempDestination));
+		positionByNetworkHistory.add(positionByNetwork);
+
+		// update the positions
+		// move target towards the target temp destination
+		targetPosition = Point.calculatePoint(targetPosition, targetTempDestination, 5f);
+		positionByNetwork = nextPositionByNetwork;
 		
 		targetDirectionIter++;
 		if(targetDirectionIter % targetDirectionMaxIters == 0) {
-			targetTempDestination = new Point(random.nextFloat() * sizeX, random.nextFloat() * sizeY);
+			targetTempDestination = new Point(random.nextFloat() * DIMENSION_X, random.nextFloat() * DIMENSION_Y);
 		}
 	}
 
-	public List<List<Point>> getPositions() {
-		return positions;
+	@Override
+	protected Map<Network, Float> calculateResultValues() {
+		// calculate the distance between netEntity and target
+		Map<Network, Float> resultValuesByNetwork = new HashMap<>();
+		for(Network network : networkList) {
+			resultValuesByNetwork.put(network, Point.calculateDistance(positionByNetwork.get(network), targetPosition));
+		}
+		return resultValuesByNetwork;
 	}
 
-	@Override
-	protected float calculateResultValue() {
-		
-		// calculate the distance between netEntity and target
-		resultValue = Point.calculateDistance(netEntityPosition, targetPosition);
-		return resultValue;
+	public List<List<Point>> getTargetPositionHistory() {
+		return targetPositionHistory;
 	}
+
+	public List<Map<Network, Point>> getPositionByNetworkHistory() {
+		return positionByNetworkHistory;
+	}
+	
 }
