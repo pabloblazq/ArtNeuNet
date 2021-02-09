@@ -2,17 +2,32 @@ package com.blame.artneunet.graphics;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
+import com.blame.artneunet.network.Network;
 import com.blame.artneunet.problemarena.ChaserProblemArena;
 import com.blame.artneunet.problemarena.Point;
 
 @SuppressWarnings("serial")
 public class ChaserProblemDisplay extends ProblemDisplay {
 
-	public ChaserProblemDisplay(ChaserProblemArena chaserProblemArena) {
-		super(chaserProblemArena, ChaserProblemArena.DIMENSION_X, ChaserProblemArena.DIMENSION_Y);
+	protected static ChaserProblemDisplay chaserProblemDisplay = new ChaserProblemDisplay();
+	
+	protected List<Network> winnerNetworks;
+
+	private ChaserProblemDisplay() {
+		super(ChaserProblemArena.DIMENSION_X, ChaserProblemArena.DIMENSION_Y);
+	}
+	
+	public static ChaserProblemDisplay getChaserProblemDisplay() {
+		return chaserProblemDisplay;
+	}
+	
+	public void initializeChaserProblemArena(ChaserProblemArena chaserProblemArena, List<Network> winnerNetworks) {
+		initializeProblemArena(chaserProblemArena);
+		this.winnerNetworks = winnerNetworks;
 	}
 
 	@Override
@@ -30,12 +45,22 @@ public class ChaserProblemDisplay extends ProblemDisplay {
 		Point targetTempDestination = targetPosition.get(1);
 		g2d.fillOval((int) targetTempDestination.getX(), (int) targetTempDestination.getY(), 4, 4);
 
-		// paint network positions
-		Collection<Point> networksPositions = ((ChaserProblemArena) problemArena).getPositionByNetworkHistory().get(iteration).values();
-		for(Point networksPosition : networksPositions) {
-	    	g2d.setColor(Color.BLUE);
+		// paint winner network positions
+		Map<Network, Point> positionByNetwork = ((ChaserProblemArena) problemArena).getPositionByNetworkHistory().get(iteration);
+		for(Entry<Network, Point> entry : positionByNetwork.entrySet()) {
+			Point networksPosition = entry.getValue();
+			if(winnerNetworks == null || winnerNetworks.contains(entry.getKey())) {
+		    	g2d.setColor(Color.BLUE);
+			} else {
+		    	g2d.setColor(Color.LIGHT_GRAY);
+			}
 			g2d.fillOval((int) networksPosition.getX(), (int) networksPosition.getY(), 4, 4);
 		}
+	}
+
+	public void close() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

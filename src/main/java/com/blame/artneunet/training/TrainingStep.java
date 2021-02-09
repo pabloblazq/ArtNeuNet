@@ -26,6 +26,9 @@ public class TrainingStep {
 
 	protected Map<Network, List<Float>> resultValuesListByNetwork;
 
+	protected ProblemArena sampleProblemArena;
+	protected List<Network> winnerNetworks;
+
 	public TrainingStep(List<Network> networkList, Class<? extends ProblemArena> problemArenaClass, int numWinnerNetworks) {
 		super();
 		this.networkList = networkList;
@@ -40,10 +43,13 @@ public class TrainingStep {
 		for(int arenaIteration = 0; arenaIteration < NUM_ARENA_ITERATIONS; arenaIteration++) {
 			ProblemArena problemArena = getProblemArenaInstance(problemArenaClass);
 			processProblemArena(problemArena);
+			if(sampleProblemArena == null) {
+				sampleProblemArena = problemArena;
+			}
 		}
 		
 		// find the n networks having the lowest average result value
-		return findNetworksWithLowestResultValue();
+		return winnerNetworks = findNetworksWithLowestResultValue();
 	}
 
 	protected ProblemArena getProblemArenaInstance(Class<? extends ProblemArena> problemArenaClass) {
@@ -77,6 +83,14 @@ public class TrainingStep {
 
 		List<Entry<Network, Double>> sortedEntriesList = avgResultValueByNetwork.entrySet().stream().sorted(Comparator.comparingDouble(Entry<Network, Double>::getValue)).collect(Collectors.toList());
 		return sortedEntriesList.stream().limit(numWinnerNetworks).map(Entry<Network, Double>::getKey).collect(Collectors.toList());
+	}
+
+	public ProblemArena getSampleProblemArena() {
+		return sampleProblemArena;
+	}
+
+	public List<Network> getWinnerNetworks() {
+		return winnerNetworks;
 	}
 
 }

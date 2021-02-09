@@ -20,18 +20,10 @@ public abstract class ProblemDisplay extends JFrame {
 	protected ProblemArena problemArena;
 	protected int iteration;
 
-    public ProblemDisplay(ProblemArena problemArena, int sizeX, int sizeY) {
-    	this.problemArena = problemArena;
-    	
-    	this.iteration = 0;
+    public ProblemDisplay(int sizeX, int sizeY) {
     	
     	this.sizeX = sizeX;
     	this.sizeY = sizeY;
-    	
-    	// init panel
-    	jPanel = new JPanel();
-        add(jPanel);
-        jPanel.setPreferredSize(new Dimension(sizeX, sizeY));
     	
     	// init window
         setTitle(this.getClass().getSimpleName());
@@ -41,6 +33,16 @@ public abstract class ProblemDisplay extends JFrame {
         setVisible(true);
 	}
 
+    public void initializeProblemArena(ProblemArena problemArena) {
+    	this.problemArena = problemArena;
+    	this.iteration = 0;
+    	
+    	// init panel
+    	jPanel = new JPanel();
+        add(jPanel);
+        jPanel.setPreferredSize(new Dimension(sizeX, sizeY));
+    }
+    
 	public boolean incrementIteration() {
 		iteration++;
 		return iteration == problemArena.getNumProblemIterations();
@@ -59,4 +61,14 @@ public abstract class ProblemDisplay extends JFrame {
      */
     public abstract void paintProblemArenaSituation(Graphics2D g2d);
     
+	public void display() {
+		try {
+			while(!incrementIteration()) {
+				Thread.sleep(100);
+				repaint(); // ends up calling this object paint method
+			}
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {/* nothing to do */}
+	}
+	
 }

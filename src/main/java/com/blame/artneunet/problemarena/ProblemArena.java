@@ -48,4 +48,6 @@ public abstract class ProblemArena {
 		return numProblemIterations;
 	}
 
+	public abstract void display(List<Network> winnerNetworks);
+
 }

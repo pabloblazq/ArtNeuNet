@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.blame.artneunet.graphics.ChaserProblemDisplay;
 import com.blame.artneunet.network.Network;
 
 /**
@@ -113,6 +114,14 @@ public class ChaserProblemArena extends ProblemArena {
 
 	public List<Map<Network, Point>> getPositionByNetworkHistory() {
 		return positionByNetworkHistory;
+	}
+
+	@Override
+	public void display(List<Network> winnerNetworks) {
+		ChaserProblemDisplay chaserProblemDisplay = ChaserProblemDisplay.getChaserProblemDisplay();
+		chaserProblemDisplay.initializeChaserProblemArena(this, winnerNetworks);
+		chaserProblemDisplay.display();
+		chaserProblemDisplay.close();
 	}
 	
 }

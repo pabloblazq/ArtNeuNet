@@ -24,14 +24,10 @@ public class ChaserProblemDisplayTest {
 			.buildNetworks(20, true);
 
 		ChaserProblemArena chaserProblemArena = new ChaserProblemArena(networkList);
-		chaserProblemArena.processProblem();
 
-		ChaserProblemDisplay chaserProblemDisplay = new ChaserProblemDisplay(chaserProblemArena);
-		while(!chaserProblemDisplay.incrementIteration()) {
-			Thread.sleep(100);
-			chaserProblemDisplay.repaint();
-		}
-		Thread.sleep(5000);
+		ChaserProblemDisplay chaserProblemDisplay = ChaserProblemDisplay.getChaserProblemDisplay();
+		chaserProblemDisplay.initializeChaserProblemArena(chaserProblemArena, null);
+		chaserProblemDisplay.display();
 	}
 
 }

@@ -15,7 +15,7 @@ public class Training {
 
 	private static final Logger logger = LogManager.getLogger(Training.class);
 	
-	protected static final int TRAINING_STEPS = 10;
+	protected static final int TRAINING_STEPS = 100;
 
 	protected static final int INITIAL_POPULATION = 100;
 	protected static final int STEP_NEW_RANDOM_NETWORKS = 10;
@@ -34,6 +34,7 @@ public class Training {
 		logTrainingStart();
 		// initial network build
 		List<Network> networkList = networkBuilder.buildNetworks(INITIAL_POPULATION, true);
+		List<Network> finalWinnerNetworks = null;
 		
 		// iterate the training steps
 		for(int trainingIteration = 0; trainingIteration < TRAINING_STEPS; trainingIteration++) {
@@ -41,21 +42,37 @@ public class Training {
 			// process the training step
 			TrainingStep trainingStep = new TrainingStep(networkList, problemArenaClass, NUM_WINNER_NETWORKS);
 			List<Network> winnerNetworks = trainingStep.processTrainingStep(problemArenaClass);
+			ProblemArena problemArena = trainingStep.getSampleProblemArena();
 			
-			// build the next generation: original winner networks, original mutated, new random networks (10/100/10)
-			networkList.clear();
-			networkList.addAll(winnerNetworks);
-			networkList.addAll(generateMutatedNetworks(winnerNetworks));
-			networkList.addAll(networkBuilder.buildNetworks(STEP_NEW_RANDOM_NETWORKS, true));
+			// last training step
+			if(trainingIteration == TRAINING_STEPS -1) {
+				finalWinnerNetworks = winnerNetworks;
+				problemArena.display(winnerNetworks);
+			} else {
+				// build the next generation: original winner networks, original mutated, new random networks (10/100/10)
+				networkList.clear();
+				networkList.addAll(winnerNetworks);
+				networkList.addAll(generateMutatedNetworks(winnerNetworks));
+				networkList.addAll(networkBuilder.buildNetworks(STEP_NEW_RANDOM_NETWORKS, true));
+			}
 		}
+		
+		logFinalWinnerNetworks(finalWinnerNetworks);
 	}
 
-	private void logTrainingStart() {
+	protected void logTrainingStart() {
 		logger.info("Starting training for:");
 		logger.info("  Problem arena: {}", problemArenaClass.getSimpleName());
 		logger.info("  Network population: {} -> w:{} m:{} r:{}", INITIAL_POPULATION, NUM_WINNER_NETWORKS, NUM_MUTATED_FROM_WINNER_NETWORK, STEP_NEW_RANDOM_NETWORKS);
 		logger.info("  Network structure: {}||{}||{}", networkBuilder.getNumberOfInputNeurons(), 
 				networkBuilder.getNumberOfProcessingNeurons().stream().map(i -> i.toString()).collect(Collectors.joining("|")), networkBuilder.getNumberOfOutputNeurons());
+	}
+
+	protected void logFinalWinnerNetworks(List<Network> finalWinnerNetworks) {
+		logger.info("Final winner networks genealogy:");
+		for(Network network : finalWinnerNetworks) {
+			logger.info("  {}", network.getGenealogyItemList());
+		}
 	}
 
 	protected List<Network> generateMutatedNetworks(List<Network> winnerNetworks) {

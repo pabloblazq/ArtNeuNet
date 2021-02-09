@@ -25,6 +25,8 @@ public class Network implements Serializable {
 	protected List<Connection> connectionList;
 	
 	protected Random random;
+	
+	protected List<GenealogyItem> genealogyItemList;
 
 	/**
 	 * 
@@ -95,6 +97,9 @@ public class Network implements Serializable {
 				connectionList.add(connection);
 			}
 		}
+		
+		genealogyItemList = new ArrayList<>();
+		genealogyItemList.add(GenealogyItem.EVA);
 	}
 
 	/**
@@ -152,6 +157,7 @@ public class Network implements Serializable {
 		
 		int connectionIndex = random.nextInt(connectionList.size());
 		connectionList.get(connectionIndex).setWeight(generateRandomWeight());
+		genealogyItemList.add(GenealogyItem.MUTANT);
 	}
 
 	/**
@@ -205,6 +211,14 @@ public class Network implements Serializable {
 	/**
 	 * 
 	 * @return
+	 */
+	public List<GenealogyItem> getGenealogyItemList() {
+		return genealogyItemList;
+	}
+
+	/**
+	 * 
+	 * @return
 	 * @throws BuildNetworkException
 	 */
 	public Network cloneNetwork() {
@@ -217,6 +231,9 @@ public class Network implements Serializable {
 				cloneNetwork.connectionList.get(i).setWeight(weight.floatValue());
 			}
 		}
+		
+		cloneNetwork.genealogyItemList.clear();
+		cloneNetwork.genealogyItemList.addAll(genealogyItemList);
 		
 		return cloneNetwork;
 	}
