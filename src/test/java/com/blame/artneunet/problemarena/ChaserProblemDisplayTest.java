@@ -5,10 +5,11 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.blame.artneunet.graphics.ChaserProblemDisplay;
+import com.blame.artneunet.graphics.chaser.ChaserProblemDisplay;
 import com.blame.artneunet.network.Network;
 import com.blame.artneunet.network.NetworkBuilder;
 import com.blame.artneunet.network.activation.TanhActivationFunction;
+import com.blame.artneunet.problemarena.chaser.ChaserProblemArena;
 
 public class ChaserProblemDisplayTest {
 

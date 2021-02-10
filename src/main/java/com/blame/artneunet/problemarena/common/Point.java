@@ -1,4 +1,4 @@
-package com.blame.artneunet.problemarena;
+package com.blame.artneunet.problemarena.common;
 
 import java.text.DecimalFormat;
 

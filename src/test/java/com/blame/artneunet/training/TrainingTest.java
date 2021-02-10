@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import com.blame.artneunet.network.NetworkBuilder;
 import com.blame.artneunet.network.activation.TanhActivationFunction;
-import com.blame.artneunet.problemarena.ChaserProblemArena;
+import com.blame.artneunet.problemarena.chaser.ChaserProblemArena;
 
 public class TrainingTest {
 

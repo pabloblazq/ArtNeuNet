@@ -1,4 +1,4 @@
-package com.blame.artneunet.problemarena;
+package com.blame.artneunet.problemarena.chaser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,8 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.blame.artneunet.graphics.ChaserProblemDisplay;
+import com.blame.artneunet.graphics.chaser.ChaserProblemDisplay;
 import com.blame.artneunet.network.Network;
+import com.blame.artneunet.problemarena.ProblemArena;
+import com.blame.artneunet.problemarena.common.Point;
 
 /**
  * i1: target x

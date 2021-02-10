@@ -1,4 +1,4 @@
-package com.blame.artneunet.graphics;
+package com.blame.artneunet.graphics.chaser;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -6,9 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.blame.artneunet.graphics.ProblemDisplay;
 import com.blame.artneunet.network.Network;
-import com.blame.artneunet.problemarena.ChaserProblemArena;
-import com.blame.artneunet.problemarena.Point;
+import com.blame.artneunet.problemarena.chaser.ChaserProblemArena;
+import com.blame.artneunet.problemarena.common.Point;
 
 @SuppressWarnings("serial")
 public class ChaserProblemDisplay extends ProblemDisplay {
