@@ -46,7 +46,7 @@ public class RacingProblemArena extends ProblemArena {
 	}
 
 	@Override
-	protected Map<Network, Float> calculateResultValues() {
+	protected Map<Network, Double> calculateResultValues() {
 		// TODO Auto-generated method stub
 		return null;
 	}

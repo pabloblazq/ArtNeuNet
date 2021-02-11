@@ -164,8 +164,8 @@ public class Network implements Serializable {
 	 * 
 	 * @return
 	 */
-	protected float generateRandomWeight() {
-		float weight = random.nextFloat(); // generates unsigned float
+	protected double generateRandomWeight() {
+		double weight = random.nextDouble(); // generates unsigned double
 		if(random.nextBoolean()) {
 			weight = - weight;
 		}
@@ -176,7 +176,7 @@ public class Network implements Serializable {
 	 * 
 	 * @param inValues
 	 */
-	public void setInputLayerValues(List<Float> inValues) {
+	public void setInputLayerValues(List<Double> inValues) {
 		for(int i = 0; i < inputLayer.size(); i++) {
 			InputNeuron inputNeuron = inputLayer.get(i);
 			inputNeuron.setValue(inValues.get(i));
@@ -187,7 +187,7 @@ public class Network implements Serializable {
 	 * 
 	 * @return
 	 */
-	public List<Float> getOutputLayerValues() {
+	public List<Double> getOutputLayerValues() {
 		return outputLayer.stream().map(outputNeuron -> outputNeuron.getValue()).collect(Collectors.toList());
 	}
 	
@@ -226,9 +226,9 @@ public class Network implements Serializable {
 		List<Integer> numOfProcessingNeurons = processingLayerList.stream().map(processingLayer -> processingLayer.size()).collect(Collectors.toList());
 		Network cloneNetwork = new Network(inputLayer.size(), numOfProcessingNeurons, outputLayer.size());
 		for(int i = 0; i < this.connectionList.size(); i++) {
-			Float weight = this.connectionList.get(i).getWeight();
+			Double weight = this.connectionList.get(i).getWeight();
 			if(weight != null) {
-				cloneNetwork.connectionList.get(i).setWeight(weight.floatValue());
+				cloneNetwork.connectionList.get(i).setWeight(weight.doubleValue());
 			}
 		}
 		

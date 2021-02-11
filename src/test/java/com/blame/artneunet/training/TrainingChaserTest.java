@@ -8,7 +8,7 @@ import com.blame.artneunet.network.NetworkBuilder;
 import com.blame.artneunet.network.activation.TanhActivationFunction;
 import com.blame.artneunet.problemarena.chaser.ChaserProblemArena;
 
-public class TrainingTest {
+public class TrainingChaserTest {
 
 	@Test
 	public void testTraining() throws InterruptedException {

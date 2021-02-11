@@ -24,7 +24,7 @@ public class TrainingStep {
 	protected Class<? extends ProblemArena> problemArenaClass;
 	protected int numWinnerNetworks;
 
-	protected Map<Network, List<Float>> resultValuesListByNetwork;
+	protected Map<Network, List<Double>> resultValuesListByNetwork;
 
 	protected ProblemArena sampleProblemArena;
 	protected List<Network> winnerNetworks;
@@ -63,9 +63,9 @@ public class TrainingStep {
 	
 	protected void processProblemArena(ProblemArena problemArena) {
 		
-		Map<Network, Float> resultValuesByNetwork = problemArena.processProblem();
-		for(Entry<Network, Float> entry : resultValuesByNetwork.entrySet()) {
-			List<Float> resultValuesList = resultValuesListByNetwork.get(entry.getKey());
+		Map<Network, Double> resultValuesByNetwork = problemArena.processProblem();
+		for(Entry<Network, Double> entry : resultValuesByNetwork.entrySet()) {
+			List<Double> resultValuesList = resultValuesListByNetwork.get(entry.getKey());
 			if(resultValuesList == null) {
 				resultValuesList = new ArrayList<>();
 				resultValuesListByNetwork.put(entry.getKey(), resultValuesList);
@@ -77,7 +77,7 @@ public class TrainingStep {
 	protected List<Network> findNetworksWithLowestResultValue() {
 		
 		Map<Network, Double> avgResultValueByNetwork = new HashMap<>();
-		for(Entry<Network, List<Float>> entry : resultValuesListByNetwork.entrySet()) {
+		for(Entry<Network, List<Double>> entry : resultValuesListByNetwork.entrySet()) {
 			avgResultValueByNetwork.put(entry.getKey(), entry.getValue().stream().mapToDouble(d -> d).average().orElse(0d));
 		}
 

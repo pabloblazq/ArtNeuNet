@@ -7,7 +7,7 @@ import com.blame.artneunet.network.neuron.Neuron;
 @SuppressWarnings("serial")
 public class Connection implements Serializable {
 
-	protected Float weight;
+	protected Double weight;
 	
 	protected Neuron inputNeuron;
 	protected Neuron outputNeuron;
@@ -22,11 +22,11 @@ public class Connection implements Serializable {
 		this.outputNeuron = outputNeuron;
 	}
 
-	public void setWeight(Float weight) {
+	public void setWeight(Double weight) {
 		this.weight = weight;
 	}
 
-	public Float getWeight() {
+	public Double getWeight() {
 		return weight;
 	}
 

@@ -27,7 +27,7 @@ public class OutputNeuron extends Neuron {
 	 */
 	public void process() {
 
-		float processingValue = 0f;
+		double processingValue = 0d;
 		for(Connection inConnection : inConnections) {
 			processingValue += inConnection.getInputNeuron().getValue() * inConnection.getWeight();
 		}

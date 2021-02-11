@@ -63,10 +63,10 @@ public class RacingCircuit {
 
 	private Point findNearestCandidate(Point candidateA, List<Point> checkpointCandidateList) {
 		
-		float minDistance = 1000f;
+		double minDistance = 1000d;
 		Point minDistanceCandidate = null;
 		for(Point candidate : checkpointCandidateList) {
-			float distance = Point.calculateDistance(candidateA, candidate);
+			double distance = Point.calculateDistance(candidateA, candidate);
 			if(minDistanceCandidate == null || distance < minDistance) {
 				minDistance = distance;
 				minDistanceCandidate = candidate;

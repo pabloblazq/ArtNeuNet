@@ -2,5 +2,5 @@ package com.blame.artneunet.network.activation;
 
 public interface IActivationFunction {
 
-	public float calculateActivationValue(float processedValue, int numOfInConnections);
+	public double calculateActivationValue(double processedValue, int numOfInConnections);
 }

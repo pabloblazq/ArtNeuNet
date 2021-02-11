@@ -24,9 +24,9 @@ public abstract class ProblemArena {
 
 	protected abstract void processProblemStep();
 	
-	protected abstract Map<Network, Float> calculateResultValues();
+	protected abstract Map<Network, Double> calculateResultValues();
 
-	public Map<Network, Float> processProblem() {
+	public Map<Network, Double> processProblem() {
 		for(int iter = 0; iter < numProblemIterations; iter++) {
 			loadProblemStatusIntoInputLayer();
 			

@@ -37,21 +37,21 @@ public class ChaserProblemArena extends ProblemArena {
 	
 	protected List<List<Point>> targetPositionHistory;
 	protected List<Map<Network, Point>> positionByNetworkHistory;
-	protected float resultValue;
+	protected double resultValue;
 	
 	public ChaserProblemArena(List<Network> networkList) {
 		super(networkList, NUM_PROBLEM_ITERATIONS);
 		
-		targetPosition = new Point(random.nextFloat() * DIMENSION_X, random.nextFloat() * DIMENSION_Y);
+		targetPosition = new Point(random.nextDouble() * DIMENSION_X, random.nextDouble() * DIMENSION_Y);
 		
-		Point initialNetEntityPosition = new Point(random.nextFloat() * DIMENSION_X, random.nextFloat() * DIMENSION_Y);
+		Point initialNetEntityPosition = new Point(random.nextDouble() * DIMENSION_X, random.nextDouble() * DIMENSION_Y);
 		positionByNetwork = new HashMap<>();
 		for(Network network : networkList) {
 			positionByNetwork.put(network, initialNetEntityPosition);
 		}
 		
 		targetDirectionMaxIters = NUM_PROBLEM_ITERATIONS / 5;
-		targetTempDestination = new Point(random.nextFloat() * DIMENSION_X, random.nextFloat() * DIMENSION_Y);
+		targetTempDestination = new Point(random.nextDouble() * DIMENSION_X, random.nextDouble() * DIMENSION_Y);
 
 		targetPositionHistory = new ArrayList<>();
 		targetPositionHistory.add(Arrays.asList(targetPosition, targetTempDestination));
@@ -79,9 +79,9 @@ public class ChaserProblemArena extends ProblemArena {
 		Map<Network, Point> nextPositionByNetwork = new HashMap<>();
 		for(Network network : networkList) {
 			// get the next net-entity position from the network output layer
-			List<Float> outputLayer = network.getOutputLayerValues();
-			float netEntityDeltaX = outputLayer.get(0) * 20f;
-			float netEntityDeltaY = outputLayer.get(1) * 20f;
+			List<Double> outputLayer = network.getOutputLayerValues();
+			double netEntityDeltaX = outputLayer.get(0) * 20d;
+			double netEntityDeltaY = outputLayer.get(1) * 20d;
 			Point nextPosition = Point.calculatePoint(positionByNetwork.get(network), netEntityDeltaX, netEntityDeltaY);
 			nextPositionByNetwork.put(network, nextPosition);
 		}
@@ -92,19 +92,19 @@ public class ChaserProblemArena extends ProblemArena {
 
 		// update the positions
 		// move target towards the target temp destination
-		targetPosition = Point.calculatePoint(targetPosition, targetTempDestination, 5f);
+		targetPosition = Point.calculatePoint(targetPosition, targetTempDestination, 5d);
 		positionByNetwork = nextPositionByNetwork;
 		
 		targetDirectionIter++;
 		if(targetDirectionIter % targetDirectionMaxIters == 0) {
-			targetTempDestination = new Point(random.nextFloat() * DIMENSION_X, random.nextFloat() * DIMENSION_Y);
+			targetTempDestination = new Point(random.nextDouble() * DIMENSION_X, random.nextDouble() * DIMENSION_Y);
 		}
 	}
 
 	@Override
-	protected Map<Network, Float> calculateResultValues() {
+	protected Map<Network, Double> calculateResultValues() {
 		// calculate the distance between netEntity and target
-		Map<Network, Float> resultValuesByNetwork = new HashMap<>();
+		Map<Network, Double> resultValuesByNetwork = new HashMap<>();
 		for(Network network : networkList) {
 			resultValuesByNetwork.put(network, Point.calculateDistance(positionByNetwork.get(network), targetPosition));
 		}

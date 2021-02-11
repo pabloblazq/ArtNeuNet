@@ -7,14 +7,14 @@ import com.blame.artneunet.network.Network;
 @SuppressWarnings("serial")
 public abstract class Neuron implements Serializable {
 
-	protected Float value;
+	protected Double value;
 	protected Network network;
 	
 	/**
 	 * 
 	 * @return
 	 */
-	public Float getValue() {
+	public Double getValue() {
 		return value;
 	}
 
@@ -22,7 +22,7 @@ public abstract class Neuron implements Serializable {
 	 * 
 	 * @param value
 	 */
-	public void setValue(Float value) {
+	public void setValue(Double value) {
 		this.value = value;
 	}
 

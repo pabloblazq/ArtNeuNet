@@ -9,50 +9,50 @@ public class Point {
 		DF.setMaximumFractionDigits(2);
 	}
 	
-	protected float x;
-	protected float y;
+	protected double x;
+	protected double y;
 	
-	public Point(float x, float y) {
+	public Point(double x, double y) {
 		super();
 		this.x = x;
 		this.y = y;
 	}
 	
-	public float getX() {
+	public double getX() {
 		return x;
 	}
 	
-	public float getY() {
+	public double getY() {
 		return y;
 	}
 	
-	public void setX(float x) {
+	public void setX(double x) {
 		this.x = x;
 	}
 
-	public void setY(float y) {
+	public void setY(double y) {
 		this.y = y;
 	}
 
-	public static Point calculatePoint(Point point, float deltaX, float deltaY) {
+	public static Point calculatePoint(Point point, double deltaX, double deltaY) {
 		return new Point(point.x + deltaX, point.y + deltaY);
 	}
 
-	public static Point calculatePoint(Point fromPoint, Point toPoint, float delta) {
-		float distance = calculateDistance(fromPoint, toPoint);
-		float factor = distance / delta;
+	public static Point calculatePoint(Point fromPoint, Point toPoint, double delta) {
+		double distance = calculateDistance(fromPoint, toPoint);
+		double factor = distance / delta;
 		
-		float deltaX = (toPoint.getX() - fromPoint.getX()) / factor;
-		float deltaY = (toPoint.getY() - fromPoint.getY()) / factor;
+		double deltaX = (toPoint.getX() - fromPoint.getX()) / factor;
+		double deltaY = (toPoint.getY() - fromPoint.getY()) / factor;
 
 		return calculatePoint(fromPoint, deltaX, deltaY);
 	}
 	
-	public static float calculateDistance(Point fromPoint, Point toPoint) {
-		double deltaX = (double) (fromPoint.getX() - toPoint.getX());
-		double deltaY = (double) (fromPoint.getY() - toPoint.getY());
+	public static double calculateDistance(Point fromPoint, Point toPoint) {
+		double deltaX = fromPoint.getX() - toPoint.getX();
+		double deltaY = fromPoint.getY() - toPoint.getY();
 		
-		return (float) Math.sqrt((deltaX * deltaX) + (deltaY * deltaY));
+		return Math.sqrt((deltaX * deltaX) + (deltaY * deltaY));
 	}
 
 	@Override

@@ -2,21 +2,21 @@ package com.blame.artneunet.network.activation;
 
 public class BinaryStepActivationFunction implements IActivationFunction {
 
-	protected Float triggerThreshold;
-	protected Float activationValue;
+	protected Double triggerThreshold;
+	protected Double activationValue;
 	
-	public BinaryStepActivationFunction(float triggerThreshold, float activationValue) {
+	public BinaryStepActivationFunction(double triggerThreshold, double activationValue) {
 		super();
 		this.triggerThreshold = triggerThreshold;
 		this.activationValue = activationValue;
 	}
 
 	@Override
-	public float calculateActivationValue(float processedValue, int numOfInConnections) {
+	public double calculateActivationValue(double processedValue, int numOfInConnections) {
 		if(processedValue > triggerThreshold) {
 			return activationValue;
 		} else {
-			return 0f;
+			return 0d;
 		}
 	}
 
