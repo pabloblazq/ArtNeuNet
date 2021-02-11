@@ -16,7 +16,7 @@ public class RacingCircuit {
 
 	protected static final Color COLOR_CHECKPOINT = Color.WHITE;
 	protected static final Color COLOR_TRACK = new Color(127, 127, 127);
-	protected static final Color COLOR_START_POINT = new Color(204, 72, 63);
+	protected static final Color COLOR_START_POINT = new Color(204, 72, 63); // seems to have changed r by b
 	
 	protected ColorMap colorMap;
 	protected List<Checkpoint> checkpointList;
@@ -77,7 +77,6 @@ public class RacingCircuit {
 	}
 
 	public Point getStartPoint() {
-		// TODO Auto-generated method stub
 		return startPoint;
 	}
 

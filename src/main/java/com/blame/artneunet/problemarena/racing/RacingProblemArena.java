@@ -21,7 +21,7 @@ import com.blame.artneunet.problemarena.ProblemArena;
  */
 public class RacingProblemArena extends ProblemArena {
 
-	protected static RacingCircuit racingCirbuit = new RacingCircuit();
+	protected static RacingCircuit racingCircuit = new RacingCircuit();
 	protected List<Racer> racerList;
 	
 	public RacingProblemArena(List<Network> networkList, int numProblemIterations) {
@@ -29,7 +29,7 @@ public class RacingProblemArena extends ProblemArena {
 		
 		racerList = new ArrayList<>();
 		for(Network network : networkList) {
-			racerList.add(new Racer(network, racingCirbuit.getStartPoint()));
+			racerList.add(new Racer(network, racingCircuit.getStartPoint()));
 		}
 	}
 
