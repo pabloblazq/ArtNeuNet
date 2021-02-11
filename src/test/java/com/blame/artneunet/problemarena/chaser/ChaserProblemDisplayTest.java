@@ -1,4 +1,4 @@
-package com.blame.artneunet.problemarena;
+package com.blame.artneunet.problemarena.chaser;
 
 import java.util.Arrays;
 import java.util.List;

@@ -14,10 +14,11 @@ import com.blame.artneunet.problemarena.common.Point;
 /**
  * i1: target x
  * i2: target y
- * i3: net-entity x
- * i4: net-entity y
- * o1: net-entity delta-x
- * o2: net-entity delta-y
+ * i3: chaser x
+ * i4: chaser y
+ * o1: chaser delta-x
+ * o2: chaser delta-y
+ * result: chaser to target distance 
  */
 public class ChaserProblemArena extends ProblemArena {
 
