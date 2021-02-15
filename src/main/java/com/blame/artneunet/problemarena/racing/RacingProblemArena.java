@@ -5,9 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+
+import com.blame.artneunet.graphics.racing.RacingProblemDisplay;
 import com.blame.artneunet.network.Network;
 import com.blame.artneunet.problemarena.ProblemArena;
-import com.blame.artneunet.problemarena.common.Point;
+import com.blame.artneunet.problemarena.common.ColorMap;
 
 /**
  * i1:  racer velocity
@@ -23,11 +26,15 @@ import com.blame.artneunet.problemarena.common.Point;
  */
 public class RacingProblemArena extends ProblemArena {
 
+	private static final int NUM_PROBLEM_ITERATIONS = 1000;
+
 	protected static RacingCircuit racingCircuit = new RacingCircuit();
 	protected List<Racer> racerList;
 	
-	public RacingProblemArena(List<Network> networkList, int numProblemIterations) {
-		super(networkList, numProblemIterations);
+	public RacingProblemArena(List<Network> networkList) {
+		super(networkList, NUM_PROBLEM_ITERATIONS);
+		
+		logger = LogManager.getLogger(this.getClass());
 		
 		racerList = new ArrayList<>();
 		for(Network network : networkList) {
@@ -35,9 +42,17 @@ public class RacingProblemArena extends ProblemArena {
 		}
 	}
 
+	public static int getNumArenaIterations() {
+		return 1;
+	}
+
+	public List<Racer> getRacerList() {
+		return racerList;
+	}
+
 	@Override
 	protected void loadProblemStatusIntoInputLayer() {
-		racerList.stream().forEach(racer -> racer.updateNetworkInput(racingCircuit.getColorMap()));
+		racerList.stream().filter(racer -> racer.network.isEnabled()).forEach(racer -> racer.updateNetworkInput(racingCircuit.getColorMap()));
 	}
 
 	@Override
@@ -46,7 +61,7 @@ public class RacingProblemArena extends ProblemArena {
 		racerList.stream().forEach(racer -> racer.storeHistory());
 
 		// process the output layer
-		racerList.stream().forEach(racer -> racer.updateStatusWithOutputLayer(racingCircuit));
+		racerList.stream().filter(racer -> racer.network.isEnabled()).forEach(racer -> racer.updateStatusWithOutputLayer(racingCircuit));
 	}
 
 	@Override
@@ -61,7 +76,11 @@ public class RacingProblemArena extends ProblemArena {
 
 	@Override
 	public void display(List<Network> winnerNetworks) {
-		// TODO Auto-generated method stub
+		ColorMap colorMap = racingCircuit.getColorMap();
+		RacingProblemDisplay racingProblemDisplay = new RacingProblemDisplay(colorMap.getNumColumns(), colorMap.getNumRows(), RacingCircuit.TRACK_FILE);
+		racingProblemDisplay.initialize(this, winnerNetworks);
+		racingProblemDisplay.display();
+		racingProblemDisplay.close();
 	}
 
 }

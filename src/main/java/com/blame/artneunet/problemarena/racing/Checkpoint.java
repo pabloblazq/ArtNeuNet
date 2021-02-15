@@ -1,7 +1,6 @@
 package com.blame.artneunet.problemarena.racing;
 
 import com.blame.artneunet.problemarena.common.Point;
-import com.blame.artneunet.problemarena.util.AngleUtil;
 
 public class Checkpoint {
 
@@ -23,7 +22,11 @@ public class Checkpoint {
 		Point intersection = Point.intersection(pointA, pointB, moveFrom, moveTo);
 		
 		// check whether the intersection point is inside the segment represented by the checkpoint
-		return intersection.isInsideSegment(pointA, pointB);
+		if(intersection == null) {
+			return false;
+		} else {
+			return intersection.isInsideSegment(pointA, pointB);
+		}
 	}
 	
 	@Override

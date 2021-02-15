@@ -2,7 +2,6 @@ package com.blame.artneunet.problemarena.racing;
 
 import static com.blame.artneunet.problemarena.util.AngleUtil.PI_2;
 import static com.blame.artneunet.problemarena.util.AngleUtil.PI_4;
-import static com.blame.artneunet.problemarena.util.AngleUtil.PIx2;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -25,8 +24,8 @@ public class Racer {
 	protected double heading; // in radians
 	
 	protected List<Point> positionHistory;
-	private List<Checkpoint> crossedCheckpointList;
-	
+	protected List<Checkpoint> crossedCheckpointList;
+
 	public Racer(Network network, Point position) {
 		super();
 		this.network = network;
@@ -56,17 +55,13 @@ public class Racer {
 		return heading;
 	}
 	
-	public double updateSpeed(double deltaSpeed) {
-		return speed += deltaSpeed;
-	}
-	
-	public double updateHeading(double deltaHeading) {
-		heading += allowedDeltaHeading(deltaHeading);
-		return heading %= PIx2;
-	}
-
 	protected double allowedDeltaHeading(double deltaHeading) {
-		return PI_2 / speed; // 90deg * (1/speed)
+		double allowed = PI_2 / Math.abs(speed); // 90deg * (1/speed)
+		if(Math.abs(deltaHeading) < allowed) {
+			return deltaHeading;
+		} else {
+			return allowed * Math.signum(deltaHeading);
+		}
 	}
 	
 	public double distanceToOutTrackSensorM90(ColorMap colorMap) {
@@ -89,13 +84,17 @@ public class Racer {
 		double sensorHeading = AngleUtil.sumAngles(heading, sensorDeltaHeading);
 		for(double distance = 1d; distance < 1000d; distance++) {
 			Point targetPoint = AngleUtil.getTargetPoint(position, distance, sensorHeading);
-			Color targetColor = colorMap.getColor((int) Math.round(targetPoint.getX()), (int) Math.round(targetPoint.getY()));
-			if(!targetColor.equals(RacingCircuit.COLOR_TRACK) && !targetColor.equals(RacingCircuit.COLOR_START_POINT)) {
+			if(!isInsideTrack(colorMap, targetPoint)) {
 				return distance;
 			}
 		}
 		
 		return 1000d;
+	}
+
+	protected boolean isInsideTrack(ColorMap colorMap, Point targetPoint) {
+		Color targetColor = colorMap.getColor((int) Math.round(targetPoint.getY()), (int) Math.round(targetPoint.getX()));
+		return targetColor != null && (targetColor.equals(RacingCircuit.COLOR_TRACK) || targetColor.equals(RacingCircuit.COLOR_START_POINT));
 	}
 
 	public void updateNetworkInput(ColorMap colorMap) {
@@ -113,23 +112,34 @@ public class Racer {
 		// process output layer
 		List<Double> outputLayerValues = network.getOutputLayerValues();
 		double deltaSpeed = outputLayerValues.get(0);
-		double deltaHeading = updateHeading(outputLayerValues.get(1) * PI_2);
+		double deltaHeading = allowedDeltaHeading(outputLayerValues.get(1) * PI_2);
 		
 		// update speed and heading
 		speed += deltaSpeed;
 		heading = AngleUtil.sumAngles(heading, deltaHeading);
 		
-		// move to the next position and check if any checkpoint was crossed
+		// move to the next position 
 		Point previousPosition = position;
 		position = AngleUtil.getTargetPoint(position, speed, heading);
+		
+		// check if any checkpoint was crossed
 		Checkpoint crossedCheckpoint = racingCircuit.findCrossedCheckpoint(previousPosition, position);
 		if(crossedCheckpoint != null) {
 			crossedCheckpointList.add(crossedCheckpoint);
+		}
+		
+		// check if the new position is out of track
+		if(!isInsideTrack(racingCircuit.getColorMap(), position)) {
+			network.setEnabled(false);
 		}
 	}
 
 	public void storeHistory() {
 		positionHistory.add(position);
+	}
+	
+	public List<Point> getPositionHistory() {
+		return positionHistory;
 	}
 
 	public double calculateResultValue(RacingCircuit racingCircuit) {

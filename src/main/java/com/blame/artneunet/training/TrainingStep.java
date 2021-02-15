@@ -16,9 +16,7 @@ import com.blame.artneunet.problemarena.ProblemArena;
 
 public class TrainingStep {
 
-	private static final Logger logger = LogManager.getLogger(Training.class);
-
-	private static final int NUM_ARENA_ITERATIONS = 10;
+	private static final Logger logger = LogManager.getLogger(TrainingStep.class);
 	
 	protected List<Network> networkList;
 	protected Class<? extends ProblemArena> problemArenaClass;
@@ -38,9 +36,10 @@ public class TrainingStep {
 		resultValuesListByNetwork = new HashMap<>();
 	}
 
-	public List<Network> processTrainingStep(Class<? extends ProblemArena> problemArenaClass) {
+	public List<Network> processTrainingStep() {
 		
-		for(int arenaIteration = 0; arenaIteration < NUM_ARENA_ITERATIONS; arenaIteration++) {
+		for(int arenaIteration = 0; arenaIteration < getNumArenaIterations(); arenaIteration++) {
+			logger.info("Processing problem arena {}", arenaIteration);
 			ProblemArena problemArena = getProblemArenaInstance(problemArenaClass);
 			processProblemArena(problemArena);
 			if(sampleProblemArena == null) {
@@ -50,6 +49,15 @@ public class TrainingStep {
 		
 		// find the n networks having the lowest average result value
 		return winnerNetworks = findNetworksWithLowestResultValue();
+	}
+
+	protected Integer getNumArenaIterations() {
+		try {
+			return (Integer) problemArenaClass.getMethod("getNumArenaIterations").invoke(null);
+		} catch (ReflectiveOperationException e) {
+			logger.catching(e);
+			return null;
+		}
 	}
 
 	protected ProblemArena getProblemArenaInstance(Class<? extends ProblemArena> problemArenaClass) {

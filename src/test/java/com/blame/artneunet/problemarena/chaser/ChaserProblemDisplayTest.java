@@ -27,7 +27,7 @@ public class ChaserProblemDisplayTest {
 		ChaserProblemArena chaserProblemArena = new ChaserProblemArena(networkList);
 
 		ChaserProblemDisplay chaserProblemDisplay = ChaserProblemDisplay.getChaserProblemDisplay();
-		chaserProblemDisplay.initializeChaserProblemArena(chaserProblemArena, null);
+		chaserProblemDisplay.initialize(chaserProblemArena, null);
 		chaserProblemDisplay.display();
 	}
 

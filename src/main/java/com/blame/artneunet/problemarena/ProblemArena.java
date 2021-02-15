@@ -4,9 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.apache.logging.log4j.Logger;
+
 import com.blame.artneunet.network.Network;
 
 public abstract class ProblemArena {
+
+	protected Logger logger;
 
 	protected List<Network> networkList;
 	protected int numProblemIterations;
@@ -28,6 +32,7 @@ public abstract class ProblemArena {
 
 	public Map<Network, Double> processProblem() {
 		for(int iter = 0; iter < numProblemIterations; iter++) {
+			logger.debug("Processing problem arena iteration {}", iter);
 			loadProblemStatusIntoInputLayer();
 			
 			processNetworks();
@@ -39,8 +44,12 @@ public abstract class ProblemArena {
 	}
 
 	protected void processNetworks() {
-		for(Network network : networkList) {
-			network.processNetwork();
+		for(int networkIndex = 0; networkIndex < networkList.size(); networkIndex++) {
+			logger.debug("Processing network {}", networkIndex);
+			Network network = networkList.get(networkIndex);
+			if(network.isEnabled()) {
+				network.processNetwork();
+			}
 		}
 	}
 

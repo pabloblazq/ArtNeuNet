@@ -12,6 +12,8 @@ import com.blame.artneunet.problemarena.common.Point;
 
 public class RacingCircuit {
 
+	public static final String TRACK_FILE = "/track_01.bmp";
+
 	private static final Logger logger = LogManager.getLogger(RacingCircuit.class);
 
 	protected static final Color COLOR_CHECKPOINT = Color.WHITE;
@@ -24,7 +26,7 @@ public class RacingCircuit {
 
 	public RacingCircuit() {
 
-		colorMap = ColorMap.loadColorMap("/track_01.bmp");
+		colorMap = ColorMap.loadColorMap(TRACK_FILE);
 		findRelevantItems();
 	}
 

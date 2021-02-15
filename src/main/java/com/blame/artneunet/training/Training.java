@@ -41,17 +41,22 @@ public class Training {
 			logger.info("Processing training step {}", trainingIteration);
 			// process the training step
 			TrainingStep trainingStep = new TrainingStep(networkList, problemArenaClass, NUM_WINNER_NETWORKS);
-			List<Network> winnerNetworks = trainingStep.processTrainingStep(problemArenaClass);
+			List<Network> winnerNetworks = trainingStep.processTrainingStep();
 			ProblemArena problemArena = trainingStep.getSampleProblemArena();
+			
+			// display condition
+			//if(trainingIteration == TRAINING_STEPS -1) {
+				problemArena.display(winnerNetworks);
+			//}
 			
 			// last training step
 			if(trainingIteration == TRAINING_STEPS -1) {
 				finalWinnerNetworks = winnerNetworks;
-				problemArena.display(winnerNetworks);
 			} else {
 				// build the next generation: original winner networks, original mutated, new random networks (10/100/10)
 				networkList.clear();
 				networkList.addAll(winnerNetworks);
+				winnerNetworks.stream().forEach(network -> network.setEnabled(true));
 				networkList.addAll(generateMutatedNetworks(winnerNetworks));
 				networkList.addAll(networkBuilder.buildNetworks(STEP_NEW_RANDOM_NETWORKS, true));
 			}

@@ -26,7 +26,7 @@ public class ChaserProblemDisplay extends ProblemDisplay {
 		return chaserProblemDisplay;
 	}
 	
-	public void initializeChaserProblemArena(ChaserProblemArena chaserProblemArena, List<Network> winnerNetworks) {
+	public void initialize(ChaserProblemArena chaserProblemArena, List<Network> winnerNetworks) {
 		initializeProblemArena(chaserProblemArena);
 		this.winnerNetworks = winnerNetworks;
 	}
@@ -49,13 +49,13 @@ public class ChaserProblemDisplay extends ProblemDisplay {
 		// paint winner network positions
 		Map<Network, Point> positionByNetwork = ((ChaserProblemArena) problemArena).getPositionByNetworkHistory().get(iteration);
 		for(Entry<Network, Point> entry : positionByNetwork.entrySet()) {
-			Point networksPosition = entry.getValue();
+			Point networkPosition = entry.getValue();
 			if(winnerNetworks == null || winnerNetworks.contains(entry.getKey())) {
 		    	g2d.setColor(Color.BLUE);
 			} else {
 		    	g2d.setColor(Color.LIGHT_GRAY);
 			}
-			g2d.fillOval((int) networksPosition.getX(), (int) networksPosition.getY(), 4, 4);
+			g2d.fillOval((int) networkPosition.getX(), (int) networkPosition.getY(), 4, 4);
 		}
 	}
 

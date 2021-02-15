@@ -60,6 +60,9 @@ public class ColorMap {
 	}
 	
 	public Color getColor(int rowIndex, int columnIndex) {
+		if(rowIndex < 0 || rowIndex > colorMap.length || columnIndex < 0 || columnIndex > colorMap[0].length) {
+			return null;
+		}
 		return colorMap[rowIndex][columnIndex];
 	}
 	

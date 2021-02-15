@@ -92,12 +92,13 @@ public class NetworkBuilder {
 	
 	/**
 	 * 
-	 * @param winnerNetwork
+	 * @param network
 	 * @return
 	 */
-	public Network generateMutatedNetwork(Network winnerNetwork) {
+	public Network generateMutatedNetwork(Network network) {
 		
-		Network copyNetwork = winnerNetwork.cloneNetwork();
+		Network copyNetwork = network.cloneNetwork();
+		copyNetwork.setEnabled(true);
 		copyNetwork.randomizeConnection();
 		return copyNetwork;
 	}

@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+
 import com.blame.artneunet.graphics.chaser.ChaserProblemDisplay;
 import com.blame.artneunet.network.Network;
 import com.blame.artneunet.problemarena.ProblemArena;
@@ -25,6 +27,7 @@ public class ChaserProblemArena extends ProblemArena {
 	public static final int DIMENSION_X = 1000;
 	public static final int DIMENSION_Y = 1000;
 	
+	private static final int NUM_ARENA_ITERATIONS = 10;
 	private static final int NUM_PROBLEM_ITERATIONS = 200;
 
 	protected Point targetPosition;
@@ -41,7 +44,9 @@ public class ChaserProblemArena extends ProblemArena {
 	
 	public ChaserProblemArena(List<Network> networkList) {
 		super(networkList, NUM_PROBLEM_ITERATIONS);
-		
+	
+		logger = LogManager.getLogger(this.getClass());
+
 		targetPosition = new Point(random.nextDouble() * DIMENSION_X, random.nextDouble() * DIMENSION_Y);
 		
 		Point initialNetEntityPosition = new Point(random.nextDouble() * DIMENSION_X, random.nextDouble() * DIMENSION_Y);
@@ -57,6 +62,10 @@ public class ChaserProblemArena extends ProblemArena {
 		targetPositionHistory.add(Arrays.asList(targetPosition, targetTempDestination));
 		positionByNetworkHistory = new ArrayList<>();
 		positionByNetworkHistory.add(positionByNetwork);
+	}
+
+	public static int getNumArenaIterations() {
+		return NUM_ARENA_ITERATIONS;
 	}
 
 	@Override
@@ -122,7 +131,7 @@ public class ChaserProblemArena extends ProblemArena {
 	@Override
 	public void display(List<Network> winnerNetworks) {
 		ChaserProblemDisplay chaserProblemDisplay = ChaserProblemDisplay.getChaserProblemDisplay();
-		chaserProblemDisplay.initializeChaserProblemArena(this, winnerNetworks);
+		chaserProblemDisplay.initialize(this, winnerNetworks);
 		chaserProblemDisplay.display();
 		chaserProblemDisplay.close();
 	}

@@ -20,6 +20,8 @@ public abstract class ProblemDisplay extends JFrame {
 	protected ProblemArena problemArena;
 	protected int iteration;
 
+	protected long delayTimeBetweenIterations = 100;
+
     public ProblemDisplay(int sizeX, int sizeY) {
     	
     	this.sizeX = sizeX;
@@ -41,6 +43,7 @@ public abstract class ProblemDisplay extends JFrame {
     	jPanel = new JPanel();
         add(jPanel);
         jPanel.setPreferredSize(new Dimension(sizeX, sizeY));
+        jPanel.setOpaque(false);
     }
     
 	public boolean incrementIteration() {
@@ -64,7 +67,7 @@ public abstract class ProblemDisplay extends JFrame {
 	public void display() {
 		try {
 			while(!incrementIteration()) {
-				Thread.sleep(100);
+				Thread.sleep(delayTimeBetweenIterations);
 				repaint(); // ends up calling this object paint method
 			}
 			Thread.sleep(5000);

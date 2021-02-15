@@ -27,6 +27,8 @@ public class Network implements Serializable {
 	protected Random random;
 	
 	protected List<GenealogyItem> genealogyItemList;
+	
+	protected boolean enabled;
 
 	/**
 	 * 
@@ -100,6 +102,8 @@ public class Network implements Serializable {
 		
 		genealogyItemList = new ArrayList<>();
 		genealogyItemList.add(GenealogyItem.EVA);
+		
+		enabled = true;
 	}
 
 	/**
@@ -216,6 +220,14 @@ public class Network implements Serializable {
 		return genealogyItemList;
 	}
 
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
 	/**
 	 * 
 	 * @return
@@ -234,6 +246,8 @@ public class Network implements Serializable {
 		
 		cloneNetwork.genealogyItemList.clear();
 		cloneNetwork.genealogyItemList.addAll(genealogyItemList);
+		
+		cloneNetwork.enabled = enabled;
 		
 		return cloneNetwork;
 	}
