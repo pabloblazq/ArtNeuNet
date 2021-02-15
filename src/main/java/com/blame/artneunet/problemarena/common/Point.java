@@ -4,6 +4,8 @@ import java.text.DecimalFormat;
 
 public class Point {
 
+	protected static final double MIN_INTERSECT_DENOM = Double.parseDouble("0.0000000001");
+
 	protected static final DecimalFormat DF = new DecimalFormat();
 	static {
 		DF.setMaximumFractionDigits(2);
@@ -39,7 +41,7 @@ public class Point {
 	}
 
 	public static Point calculatePoint(Point fromPoint, Point toPoint, double delta) {
-		double distance = calculateDistance(fromPoint, toPoint);
+		double distance = distance(fromPoint, toPoint);
 		double factor = distance / delta;
 		
 		double deltaX = (toPoint.getX() - fromPoint.getX()) / factor;
@@ -48,13 +50,42 @@ public class Point {
 		return calculatePoint(fromPoint, deltaX, deltaY);
 	}
 	
-	public static double calculateDistance(Point fromPoint, Point toPoint) {
+	public static double distance(Point fromPoint, Point toPoint) {
 		double deltaX = fromPoint.getX() - toPoint.getX();
 		double deltaY = fromPoint.getY() - toPoint.getY();
 		
 		return Math.sqrt((deltaX * deltaX) + (deltaY * deltaY));
 	}
 
+	public static Point mediumPoint(Point pointA, Point pointB) {
+		
+		return new Point((pointA.x + pointB.x) / 2d, (pointA.y + pointB.y) / 2d);
+	}
+
+	public static Point intersection(Point point1, Point point2, Point point3, Point point4) {
+		
+		double denom = ((point1.x -point2.x) * (point3.y - point4.y)) - ((point1.y -point2.y) * (point3.x - point4.x));
+		if(Math.abs(denom) < MIN_INTERSECT_DENOM) {
+			return null;
+		}
+		
+		double numx = ((point1.x * point2.y - point1.y * point2.x) * (point3.x - point4.x)) - 
+					  ((point3.x * point4.y - point3.y * point4.x) * (point1.x - point2.x));
+		
+		double numy = ((point1.x * point2.y - point1.y * point2.x) * (point3.y - point4.y)) - 
+				      ((point3.x * point4.y - point3.y * point4.x) * (point1.y - point2.y));
+		
+		return new Point(numx/denom, numy/denom);
+	}
+
+	public boolean isInsideSegment(Point pointA, Point pointB) {
+		
+		boolean insideX = (x > pointA.x && x < pointB.x) || (x > pointB.x && x < pointA.x);
+		boolean insideY = (y > pointA.y && x < pointB.y) || (y > pointB.y && y < pointA.y);
+		
+		return insideX && insideY;
+	}
+	
 	@Override
 	public String toString() {
 		return "(" + x + ", " + y + ")";

@@ -66,7 +66,7 @@ public class RacingCircuit {
 		double minDistance = 1000d;
 		Point minDistanceCandidate = null;
 		for(Point candidate : checkpointCandidateList) {
-			double distance = Point.calculateDistance(candidateA, candidate);
+			double distance = Point.distance(candidateA, candidate);
 			if(minDistanceCandidate == null || distance < minDistance) {
 				minDistance = distance;
 				minDistanceCandidate = candidate;
@@ -78,6 +78,20 @@ public class RacingCircuit {
 
 	public Point getStartPoint() {
 		return startPoint;
+	}
+
+	public ColorMap getColorMap() {
+		return colorMap;
+	}
+
+	public Checkpoint findCrossedCheckpoint(Point previousPosition, Point position) {
+		for(Checkpoint checkpoint : checkpointList) {
+			if(checkpoint.isCrossedByTransition(previousPosition, position)) {
+				return checkpoint;
+			}
+		}
+
+		return null;
 	}
 
 }

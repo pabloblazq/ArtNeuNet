@@ -1,6 +1,7 @@
 package com.blame.artneunet.problemarena.racing;
 
 import com.blame.artneunet.problemarena.common.Point;
+import com.blame.artneunet.problemarena.util.AngleUtil;
 
 public class Checkpoint {
 
@@ -13,13 +14,21 @@ public class Checkpoint {
 		this.pointB = pointB;
 	}
 
-	public boolean movementCrossedCheckpoint(Point pre, Point pos) {
-		// TODO: implement
-		return false;
+	public Point getMediumPoint() {
+		return Point.mediumPoint(pointA, pointB);
 	}
 
+	public boolean isCrossedByTransition(Point moveFrom, Point moveTo) {
+		// calculate the intersection point for the checkpoint line and the movement line
+		Point intersection = Point.intersection(pointA, pointB, moveFrom, moveTo);
+		
+		// check whether the intersection point is inside the segment represented by the checkpoint
+		return intersection.isInsideSegment(pointA, pointB);
+	}
+	
 	@Override
 	public String toString() {
 		return "[" + pointA + ", " + pointB + "]";
 	}
+
 }

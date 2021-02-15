@@ -1,11 +1,13 @@
 package com.blame.artneunet.problemarena.racing;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.blame.artneunet.network.Network;
 import com.blame.artneunet.problemarena.ProblemArena;
+import com.blame.artneunet.problemarena.common.Point;
 
 /**
  * i1:  racer velocity
@@ -17,7 +19,7 @@ import com.blame.artneunet.problemarena.ProblemArena;
  * i3e: racer sensor +90
  * o1: racer delta-velocity
  * o2: racer delta-heading
- * result: distance travelled from start + (1000 * num of checkpoints crossed) 
+ * result: distance travelled from last checkpoint + (1000 * num of checkpoints crossed) 
  */
 public class RacingProblemArena extends ProblemArena {
 
@@ -35,26 +37,31 @@ public class RacingProblemArena extends ProblemArena {
 
 	@Override
 	protected void loadProblemStatusIntoInputLayer() {
-		// TODO Auto-generated method stub
-
+		racerList.stream().forEach(racer -> racer.updateNetworkInput(racingCircuit.getColorMap()));
 	}
 
 	@Override
 	protected void processProblemStep() {
-		// TODO Auto-generated method stub
+		// store the history
+		racerList.stream().forEach(racer -> racer.storeHistory());
 
+		// process the output layer
+		racerList.stream().forEach(racer -> racer.updateStatusWithOutputLayer(racingCircuit));
 	}
 
 	@Override
 	protected Map<Network, Double> calculateResultValues() {
-		// TODO Auto-generated method stub
-		return null;
+
+		Map<Network, Double> resultValuesByNetwork = new HashMap<>();
+		for(Racer racer : racerList) {
+			resultValuesByNetwork.put(racer.getNetwork(), racer.calculateResultValue(racingCircuit));
+		}
+		return resultValuesByNetwork;
 	}
 
 	@Override
 	public void display(List<Network> winnerNetworks) {
 		// TODO Auto-generated method stub
-
 	}
 
 }

@@ -90,7 +90,7 @@ public class ChaserProblemArena extends ProblemArena {
 		targetPositionHistory.add(Arrays.asList(targetPosition, targetTempDestination));
 		positionByNetworkHistory.add(positionByNetwork);
 
-		// update the positions
+		// update the problem status (network positions, target position, target temp destination position)
 		// move target towards the target temp destination
 		targetPosition = Point.calculatePoint(targetPosition, targetTempDestination, 5d);
 		positionByNetwork = nextPositionByNetwork;
@@ -106,7 +106,7 @@ public class ChaserProblemArena extends ProblemArena {
 		// calculate the distance between netEntity and target
 		Map<Network, Double> resultValuesByNetwork = new HashMap<>();
 		for(Network network : networkList) {
-			resultValuesByNetwork.put(network, Point.calculateDistance(positionByNetwork.get(network), targetPosition));
+			resultValuesByNetwork.put(network, Point.distance(positionByNetwork.get(network), targetPosition));
 		}
 		return resultValuesByNetwork;
 	}
