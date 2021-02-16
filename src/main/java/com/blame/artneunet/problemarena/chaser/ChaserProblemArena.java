@@ -115,7 +115,7 @@ public class ChaserProblemArena extends ProblemArena {
 		// calculate the distance between netEntity and target
 		Map<Network, Double> resultValuesByNetwork = new HashMap<>();
 		for(Network network : networkList) {
-			resultValuesByNetwork.put(network, Point.distance(positionByNetwork.get(network), targetPosition));
+			resultValuesByNetwork.put(network, -Point.distance(positionByNetwork.get(network), targetPosition));
 		}
 		return resultValuesByNetwork;
 	}

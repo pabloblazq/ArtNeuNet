@@ -48,7 +48,7 @@ public class TrainingStep {
 		}
 		
 		// find the n networks having the lowest average result value
-		return winnerNetworks = findNetworksWithLowestResultValue();
+		return winnerNetworks = findNetworksWithHighestResultValue();
 	}
 
 	protected Integer getNumArenaIterations() {
@@ -82,7 +82,7 @@ public class TrainingStep {
 		}
 	}
 
-	protected List<Network> findNetworksWithLowestResultValue() {
+	protected List<Network> findNetworksWithHighestResultValue() {
 		
 		Map<Network, Double> avgResultValueByNetwork = new HashMap<>();
 		for(Entry<Network, List<Double>> entry : resultValuesListByNetwork.entrySet()) {
@@ -90,7 +90,7 @@ public class TrainingStep {
 		}
 
 		List<Entry<Network, Double>> sortedEntriesList = avgResultValueByNetwork.entrySet().stream().sorted(Comparator.comparingDouble(Entry<Network, Double>::getValue)).collect(Collectors.toList());
-		return sortedEntriesList.stream().limit(numWinnerNetworks).map(Entry<Network, Double>::getKey).collect(Collectors.toList());
+		return sortedEntriesList.stream().skip(sortedEntriesList.size() - numWinnerNetworks).map(Entry<Network, Double>::getKey).collect(Collectors.toList());
 	}
 
 	public ProblemArena getSampleProblemArena() {

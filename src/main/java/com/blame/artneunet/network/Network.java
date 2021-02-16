@@ -236,7 +236,15 @@ public class Network implements Serializable {
 	public Network cloneNetwork() {
 		
 		List<Integer> numOfProcessingNeurons = processingLayerList.stream().map(processingLayer -> processingLayer.size()).collect(Collectors.toList());
+		
+		// build a new one with the same architecture
 		Network cloneNetwork = new Network(inputLayer.size(), numOfProcessingNeurons, outputLayer.size());
+		
+		// copy the activation functions
+		cloneNetwork.setProcessingActivationFunction(processingActivationFunction);
+		cloneNetwork.setOutputActivationFunction(outputActivationFunction);
+
+		// copy the connection weights
 		for(int i = 0; i < this.connectionList.size(); i++) {
 			Double weight = this.connectionList.get(i).getWeight();
 			if(weight != null) {
@@ -244,9 +252,11 @@ public class Network implements Serializable {
 			}
 		}
 		
+		// copy the genealogy
 		cloneNetwork.genealogyItemList.clear();
 		cloneNetwork.genealogyItemList.addAll(genealogyItemList);
 		
+		// copy the enabled attribute
 		cloneNetwork.enabled = enabled;
 		
 		return cloneNetwork;

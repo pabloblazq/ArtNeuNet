@@ -20,6 +20,8 @@ public class ChaserProblemDisplay extends ProblemDisplay {
 
 	private ChaserProblemDisplay() {
 		super(ChaserProblemArena.DIMENSION_X, ChaserProblemArena.DIMENSION_Y);
+		
+        setVisible(true);
 	}
 	
 	public static ChaserProblemDisplay getChaserProblemDisplay() {
@@ -27,7 +29,7 @@ public class ChaserProblemDisplay extends ProblemDisplay {
 	}
 	
 	public void initialize(ChaserProblemArena chaserProblemArena, List<Network> winnerNetworks) {
-		initializeProblemArena(chaserProblemArena);
+		setProblemArena(chaserProblemArena);
 		this.winnerNetworks = winnerNetworks;
 	}
 

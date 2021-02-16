@@ -13,7 +13,7 @@ public class MiscTest {
 		
 		Point point1 = new Point(1d, 1d);
 		Point point2 = new Point(3d, 3d);
-		Checkpoint checkpoint = new Checkpoint(point1, point2);
+		Checkpoint checkpoint = new Checkpoint(point1, point2, 0);
 
 		Point point3 = new Point(2d, 4d);
 		Point point4 = new Point(4d, 2d);

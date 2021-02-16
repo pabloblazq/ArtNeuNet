@@ -76,6 +76,14 @@ public class RacingProblemArena extends ProblemArena {
 
 	@Override
 	public void display(List<Network> winnerNetworks) {
+		for(Network winnerNetwork : winnerNetworks) {
+			for(Racer racer : racerList) {
+				if(racer.getNetwork().equals(winnerNetwork)) {
+					logger.info("winner network :: result value {} : last position {} : checkpoints {}", racer.getResultValue(), racer.getPosition(), racer.getCrossedCheckpointList());
+				}
+			}
+		}
+		
 		ColorMap colorMap = racingCircuit.getColorMap();
 		RacingProblemDisplay racingProblemDisplay = new RacingProblemDisplay(colorMap.getNumColumns(), colorMap.getNumRows(), RacingCircuit.TRACK_FILE);
 		racingProblemDisplay.initialize(this, winnerNetworks);

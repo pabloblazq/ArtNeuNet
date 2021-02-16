@@ -27,27 +27,31 @@ public class RacingProblemDisplay extends ProblemDisplay {
 
 	public RacingProblemDisplay(int sizeX, int sizeY, String trackFilepathname) {
 		super(sizeX, sizeY);
-		delayTimeBetweenIterations = 50;
 		try {
 			backgroundImage = ImageIO.read(RacingProblemDisplay.class.getResourceAsStream(trackFilepathname));
 		} catch (IOException e) {
 			logger.catching(e);
 		}
+		
+        setVisible(true);
 	}
 
 	public void initialize(RacingProblemArena racingProblemArena, List<Network> winnerNetworks) {
-		initializeProblemArena(racingProblemArena);
+		setProblemArena(racingProblemArena);
 		this.winnerNetworks = winnerNetworks;
 	}
 	
 	@Override
 	public void paintProblemArenaSituation(Graphics2D g2d) {
-		if(problemArena == null) {
+		Racer firstRacer = ((RacingProblemArena) problemArena).getRacerList().get(0);
+		if(problemArena == null || iteration >= firstRacer.getPositionHistory().size()) {
 			return;
 		}
 		
+		// background image
 		g2d.drawImage(backgroundImage, 0, 0, null);
 		
+		// all the racers
     	g2d.setColor(Color.LIGHT_GRAY);
 		for(Racer racer : ((RacingProblemArena) problemArena).getRacerList()) {
 			Point position = racer.getPositionHistory().get(iteration);
@@ -62,6 +66,16 @@ public class RacingProblemDisplay extends ProblemDisplay {
     			paintRacer(g2d, position);
     		}
     	}
+    	
+    	// detect early stop for all racers being disabled
+    	boolean earlyStop = true;
+    	for(Racer racer : ((RacingProblemArena) problemArena).getRacerList()) {
+    		if(racer.getEnableHistory().get(iteration)) {
+    			earlyStop = false;
+    			break;
+    		}
+    	}
+    	this.earlyStop = earlyStop;
 	}
 
 	private boolean isWinner(Racer racer) {

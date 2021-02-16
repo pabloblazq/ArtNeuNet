@@ -1,26 +1,24 @@
 package com.blame.artneunet.graphics;
 
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import com.blame.artneunet.problemarena.ProblemArena;
 
 @SuppressWarnings("serial")
 public abstract class ProblemDisplay extends JFrame {
 
-    protected JPanel jPanel;
-    
 	protected int sizeX;
 	protected int sizeY;
 	
 	protected ProblemArena problemArena;
 	protected int iteration;
 
-	protected long delayTimeBetweenIterations = 100;
+	protected long delayTimeBetweenIterations = 50;
+	
+	protected boolean earlyStop = false;
 
     public ProblemDisplay(int sizeX, int sizeY) {
     	
@@ -32,23 +30,16 @@ public abstract class ProblemDisplay extends JFrame {
         setSize(sizeX, sizeY);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setVisible(true);
 	}
 
-    public void initializeProblemArena(ProblemArena problemArena) {
+    public void setProblemArena(ProblemArena problemArena) {
     	this.problemArena = problemArena;
     	this.iteration = 0;
-    	
-    	// init panel
-    	jPanel = new JPanel();
-        add(jPanel);
-        jPanel.setPreferredSize(new Dimension(sizeX, sizeY));
-        jPanel.setOpaque(false);
     }
     
 	public boolean incrementIteration() {
 		iteration++;
-		return iteration == problemArena.getNumProblemIterations();
+		return iteration == problemArena.getNumProblemIterations() || earlyStop;
 	}
 
     @Override

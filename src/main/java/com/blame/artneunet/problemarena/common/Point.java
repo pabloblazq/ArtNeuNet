@@ -1,6 +1,7 @@
 package com.blame.artneunet.problemarena.common;
 
 import java.text.DecimalFormat;
+import java.util.Objects;
 
 public class Point {
 
@@ -80,8 +81,8 @@ public class Point {
 
 	public boolean isInsideSegment(Point pointA, Point pointB) {
 		
-		boolean insideX = (x > pointA.x && x < pointB.x) || (x > pointB.x && x < pointA.x);
-		boolean insideY = (y > pointA.y && x < pointB.y) || (y > pointB.y && y < pointA.y);
+		boolean insideX = (x >= pointA.x && x <= pointB.x) || (x >= pointB.x && x <= pointA.x);
+		boolean insideY = (y >= pointA.y && x <= pointB.y) || (y >= pointB.y && y <= pointA.y);
 		
 		return insideX && insideY;
 	}
@@ -89,6 +90,24 @@ public class Point {
 	@Override
 	public String toString() {
 		return "(" + x + ", " + y + ")";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(x, y);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Point other = (Point) obj;
+		return Double.doubleToLongBits(x) == Double.doubleToLongBits(other.x)
+				&& Double.doubleToLongBits(y) == Double.doubleToLongBits(other.y);
 	}
 
 }

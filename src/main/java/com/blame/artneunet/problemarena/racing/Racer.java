@@ -15,7 +15,7 @@ import com.blame.artneunet.problemarena.util.AngleUtil;
 
 public class Racer {
 
-	protected static final double REWARD_FOR_CHECKPOINT = 1000d;
+	protected static final double REWARD_FOR_CHECKPOINT = 2000d;
 	
 	protected Network network;
 	protected Point position;
@@ -24,10 +24,12 @@ public class Racer {
 	protected double heading; // in radians
 	
 	protected List<Point> positionHistory;
+	protected List<Boolean> enableHistory;
 	protected List<Checkpoint> crossedCheckpointList;
 
+	private double resultValue;
+
 	public Racer(Network network, Point position) {
-		super();
 		this.network = network;
 		this.position = position;
 		
@@ -35,6 +37,7 @@ public class Racer {
 		this.heading = 0d;
 		
 		this.positionHistory = new ArrayList<>();
+		this.enableHistory = new ArrayList<>();
 		this.crossedCheckpointList = new ArrayList<>();
 	}
 
@@ -124,7 +127,7 @@ public class Racer {
 		
 		// check if any checkpoint was crossed
 		Checkpoint crossedCheckpoint = racingCircuit.findCrossedCheckpoint(previousPosition, position);
-		if(crossedCheckpoint != null) {
+		if(crossedCheckpoint != null && !crossedCheckpointList.contains(crossedCheckpoint)) {
 			crossedCheckpointList.add(crossedCheckpoint);
 		}
 		
@@ -136,20 +139,35 @@ public class Racer {
 
 	public void storeHistory() {
 		positionHistory.add(position);
+		enableHistory.add(network.isEnabled());
 	}
 	
 	public List<Point> getPositionHistory() {
 		return positionHistory;
 	}
 
+	public List<Boolean> getEnableHistory() {
+		return enableHistory;
+	}
+
+	public List<Checkpoint> getCrossedCheckpointList() {
+		return crossedCheckpointList;
+	}
+
 	public double calculateResultValue(RacingCircuit racingCircuit) {
 		// if no checkpoint was crossed, then the distance to the startPoint determines the result value
 		if(crossedCheckpointList.isEmpty()) {
-			return Point.distance(racingCircuit.getStartPoint(), position);
+			return resultValue = Point.distance(racingCircuit.getStartPoint(), position);
 		} else {
-			double resultValue = crossedCheckpointList.size() * REWARD_FOR_CHECKPOINT;
+			resultValue = crossedCheckpointList.size() * REWARD_FOR_CHECKPOINT;
 			Checkpoint lastCheckpoint = crossedCheckpointList.get(crossedCheckpointList.size()-1);
-			return resultValue + Point.distance(lastCheckpoint.getMediumPoint(), position);
+			resultValue += Point.distance(lastCheckpoint.getMediumPoint(), position);
+			return resultValue;
 		}
+	}
+
+
+	public double getResultValue() {
+		return resultValue;
 	}
 }

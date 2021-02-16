@@ -46,7 +46,7 @@ public class RacingCircuit {
 		}
 		
 		buildCheckpointList(checkpointCandidateList);
-		logger.info("Checkpoints at {}", checkpointList);
+		logger.info("{} checkpoints at {}", checkpointList.size(), checkpointList);
 	}
 
 	private void buildCheckpointList(List<Point> checkpointCandidateList) {
@@ -59,7 +59,7 @@ public class RacingCircuit {
 			Point candidateB = findNearestCandidate(candidateA, checkpointCandidateList);
 			checkpointCandidateList.remove(candidateB);
 			
-			checkpointList.add(new Checkpoint(candidateA, candidateB));
+			checkpointList.add(new Checkpoint(candidateA, candidateB, i));
 		}
 	}
 
