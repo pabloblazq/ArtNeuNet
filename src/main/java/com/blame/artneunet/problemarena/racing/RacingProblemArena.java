@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 
@@ -79,7 +80,8 @@ public class RacingProblemArena extends ProblemArena {
 		for(Network winnerNetwork : winnerNetworks) {
 			for(Racer racer : racerList) {
 				if(racer.getNetwork().equals(winnerNetwork)) {
-					logger.info("winner network :: result value {} : last position {} : checkpoints {}", racer.getResultValue(), racer.getPosition(), racer.getCrossedCheckpointList());
+					logger.info("winner network :: result value {} : last position {} : checkpoints {}", 
+							racer.getResultValue(), racer.getPosition(), racer.getCrossedCheckpointList().stream().map(checkpoint -> checkpoint.getIndex()).collect(Collectors.toList()));
 				}
 			}
 		}

@@ -8,13 +8,17 @@ public class Checkpoint {
 
 	protected Point pointA;
 	protected Point pointB;
-	private Integer index;
+	protected Integer index;
 	
 	public Checkpoint(Point pointA, Point pointB, int index) {
 		super();
 		this.pointA = pointA;
 		this.pointB = pointB;
 		this.index = index;
+	}
+
+	public Integer getIndex() {
+		return index;
 	}
 
 	public Point getMediumPoint() {
