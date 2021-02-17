@@ -82,7 +82,7 @@ public class ChaserProblemArena extends ProblemArena {
 	}
 
 	@Override
-	protected void processProblemStep() {
+	protected void processProblemStep(int currentIteration) {
 
 		// process the output layer
 		Map<Network, Point> nextPositionByNetwork = new HashMap<>();

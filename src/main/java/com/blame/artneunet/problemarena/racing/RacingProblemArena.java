@@ -26,7 +26,7 @@ import com.blame.artneunet.problemarena.common.ColorMap;
  */
 public class RacingProblemArena extends ProblemArena {
 
-	private static final int NUM_PROBLEM_ITERATIONS = 1000;
+	private static final int NUM_PROBLEM_ITERATIONS = 2000;
 
 	protected static RacingCircuit racingCircuit = new RacingCircuit();
 	protected List<Racer> racerList;
@@ -56,12 +56,12 @@ public class RacingProblemArena extends ProblemArena {
 	}
 
 	@Override
-	protected void processProblemStep() {
+	protected void processProblemStep(int currentIteration) {
 		// store the history
 		racerList.stream().forEach(racer -> racer.storeHistory());
 
 		// process the output layer
-		racerList.stream().filter(racer -> racer.network.isEnabled()).forEach(racer -> racer.updateStatusWithOutputLayer(racingCircuit));
+		racerList.stream().filter(racer -> racer.network.isEnabled()).forEach(racer -> racer.updateStatusWithOutputLayer(racingCircuit, currentIteration));
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class RacingProblemArena extends ProblemArena {
 
 		Map<Network, Double> resultValuesByNetwork = new HashMap<>();
 		for(Racer racer : racerList) {
-			resultValuesByNetwork.put(racer.getNetwork(), racer.calculateResultValue(racingCircuit));
+			resultValuesByNetwork.put(racer.getNetwork(), racer.calculateResultValue(racingCircuit, NUM_PROBLEM_ITERATIONS));
 		}
 		return resultValuesByNetwork;
 	}

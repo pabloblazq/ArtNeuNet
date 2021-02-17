@@ -67,10 +67,10 @@ public class RacingProblemDisplay extends ProblemDisplay {
     		}
     	}
     	
-    	// detect early stop for all racers being disabled
+    	// detect early stop for all winner racers being disabled
     	boolean earlyStop = true;
     	for(Racer racer : ((RacingProblemArena) problemArena).getRacerList()) {
-    		if(racer.getEnableHistory().get(iteration)) {
+    		if(isWinner(racer) && racer.getEnableHistory().get(iteration)) {
     			earlyStop = false;
     			break;
     		}

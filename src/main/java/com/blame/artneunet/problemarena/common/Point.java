@@ -82,7 +82,7 @@ public class Point {
 	public boolean isInsideSegment(Point pointA, Point pointB) {
 		
 		boolean insideX = (x >= pointA.x && x <= pointB.x) || (x >= pointB.x && x <= pointA.x);
-		boolean insideY = (y >= pointA.y && x <= pointB.y) || (y >= pointB.y && y <= pointA.y);
+		boolean insideY = (y >= pointA.y && y <= pointB.y) || (y >= pointB.y && y <= pointA.y);
 		
 		return insideX && insideY;
 	}

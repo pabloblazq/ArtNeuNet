@@ -26,7 +26,7 @@ public abstract class ProblemArena {
 
 	protected abstract void loadProblemStatusIntoInputLayer();
 
-	protected abstract void processProblemStep();
+	protected abstract void processProblemStep(int currentIteration);
 	
 	protected abstract Map<Network, Double> calculateResultValues();
 
@@ -37,7 +37,7 @@ public abstract class ProblemArena {
 			
 			processNetworks();
 			
-			processProblemStep();
+			processProblemStep(iter);
 		}
 		
 		return calculateResultValues();

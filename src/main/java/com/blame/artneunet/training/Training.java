@@ -37,20 +37,20 @@ public class Training {
 		List<Network> finalWinnerNetworks = null;
 		
 		// iterate the training steps
-		for(int trainingIteration = 0; trainingIteration < TRAINING_STEPS; trainingIteration++) {
-			logger.info("Processing training step {}", trainingIteration);
+		for(int trainingStepIteration = 0; trainingStepIteration < TRAINING_STEPS; trainingStepIteration++) {
+			logger.info("Processing training step {}", trainingStepIteration);
 			// process the training step
 			TrainingStep trainingStep = new TrainingStep(networkList, problemArenaClass, NUM_WINNER_NETWORKS);
 			List<Network> winnerNetworks = trainingStep.processTrainingStep();
 			ProblemArena problemArena = trainingStep.getSampleProblemArena();
 			
 			// display condition
-			//if(trainingIteration == TRAINING_STEPS -1) {
+			if((trainingStepIteration % 10) == 0 || trainingStepIteration == TRAINING_STEPS -1) {
 				problemArena.display(winnerNetworks);
-			//}
+			}
 			
 			// last training step
-			if(trainingIteration == TRAINING_STEPS -1) {
+			if(trainingStepIteration == TRAINING_STEPS -1) {
 				finalWinnerNetworks = winnerNetworks;
 			} else {
 				// build the next generation: original winner networks, original mutated, new random networks (10/100/10)
