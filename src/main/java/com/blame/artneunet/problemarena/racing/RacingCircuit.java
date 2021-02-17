@@ -96,4 +96,8 @@ public class RacingCircuit {
 		return null;
 	}
 
+	public List<Checkpoint> getCheckpointList() {
+		return checkpointList;
+	}
+
 }

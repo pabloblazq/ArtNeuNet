@@ -26,7 +26,7 @@ import com.blame.artneunet.problemarena.common.ColorMap;
  */
 public class RacingProblemArena extends ProblemArena {
 
-	private static final int NUM_PROBLEM_ITERATIONS = 2000;
+	private static final int NUM_PROBLEM_ITERATIONS = 4000;
 
 	protected static RacingCircuit racingCircuit = new RacingCircuit();
 	protected List<Racer> racerList;

@@ -16,6 +16,7 @@ import com.blame.artneunet.problemarena.util.AngleUtil;
 public class Racer {
 
 	protected static final double REWARD_FOR_CHECKPOINT = 2000d;
+	protected static final double REWARD_FOR_LAP = 50000d;
 	
 	protected Network network;
 	protected Point position;
@@ -30,6 +31,8 @@ public class Racer {
 	private double resultValue;
 
 	private Integer lastCheckpointIteration;
+
+	private int lapCount = 0;
 
 	public Racer(Network network, Point position) {
 		this.network = network;
@@ -133,9 +136,15 @@ public class Racer {
 			if(!crossedCheckpointList.contains(crossedCheckpoint)) { // new checkpoint
 				crossedCheckpointList.add(crossedCheckpoint);
 				lastCheckpointIteration = currentIteration;
-			} else if(crossedCheckpoint.equals(crossedCheckpointList.get(crossedCheckpointList.size()-1))) { // last checkpoint revisit: avoid backwards
+			} else if(crossedCheckpoint.equals(crossedCheckpointList.get(crossedCheckpointList.size()-1))) {
+				// last checkpoint revisit: avoid backwards
 				network.setEnabled(false);
-			} // TODO: else if all checkpoints visited, leave current checkpoint as only item in list and add num lap reward
+			} else if(crossedCheckpointList.size() == racingCircuit.getCheckpointList().size() && crossedCheckpoint.equals(crossedCheckpointList.get(0))) {
+				// all checkpoints visited, leave current checkpoint as only item in list and add num lap reward
+				crossedCheckpointList.clear();
+				crossedCheckpointList.add(crossedCheckpoint);
+				lapCount++;
+			}
 		}
 		
 		// check if the new position is out of track
@@ -166,17 +175,22 @@ public class Racer {
 		if(crossedCheckpointList.isEmpty()) {
 			return resultValue = Point.distance(racingCircuit.getStartPoint(), position);
 		} else {
-			// reward by: num checkpoints, distance from checkpoint, iteration time at checkpoint
+			// reward by: num checkpoints
 			resultValue = crossedCheckpointList.size() * REWARD_FOR_CHECKPOINT;
 			
+			// reward by: distance from checkpoint
 			Checkpoint lastCheckpoint = crossedCheckpointList.get(crossedCheckpointList.size()-1);
 			resultValue += Point.distance(lastCheckpoint.getMediumPoint(), position);
 			
+			// iteration time at checkpoint
 			//resultValue += (maxProblemIterations - lastCheckpointIteration) / 10;
+			
+			// reward by: num checkpoints
+			resultValue += lapCount * REWARD_FOR_LAP;
+
 			return resultValue;
 		}
 	}
-
 
 	public double getResultValue() {
 		return resultValue;

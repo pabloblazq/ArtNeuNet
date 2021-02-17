@@ -16,7 +16,7 @@ public abstract class ProblemDisplay extends JFrame {
 	protected ProblemArena problemArena;
 	protected int iteration;
 
-	protected long delayTimeBetweenIterations = 50;
+	protected long delayTimeBetweenIterations = 20;
 	
 	protected boolean earlyStop = false;
 
