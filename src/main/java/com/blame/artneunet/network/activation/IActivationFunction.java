@@ -1,6 +1,8 @@
 package com.blame.artneunet.network.activation;
 
-public interface IActivationFunction {
+import java.io.Serializable;
+
+public interface IActivationFunction extends Serializable {
 
 	public double calculateActivationValue(double processedValue, int numOfInConnections);
 }

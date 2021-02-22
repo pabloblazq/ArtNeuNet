@@ -1,5 +1,9 @@
 package com.blame.artneunet.training;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,9 +49,9 @@ public class Training {
 			ProblemArena problemArena = trainingStep.getSampleProblemArena();
 			
 			// display condition
-			if((trainingStepIteration % 10) == 0 || trainingStepIteration == TRAINING_STEPS -1) {
-				problemArena.display(winnerNetworks);
-			}
+//			if((trainingStepIteration % 10) == 0 || trainingStepIteration == TRAINING_STEPS -1) {
+//				problemArena.display(winnerNetworks);
+//			}
 			
 			// last training step
 			if(trainingStepIteration == TRAINING_STEPS -1) {
@@ -63,6 +67,7 @@ public class Training {
 		}
 		
 		logFinalWinnerNetworks(finalWinnerNetworks);
+		storeFinalWinnerNetworks(finalWinnerNetworks);
 	}
 
 	protected void logTrainingStart() {
@@ -77,6 +82,26 @@ public class Training {
 		logger.info("Final winner networks genealogy:");
 		for(Network network : finalWinnerNetworks) {
 			logger.info("  {}", network.getGenealogyItemList());
+		}
+	}
+
+	protected void storeFinalWinnerNetworks(List<Network> finalWinnerNetworks) {
+		String outputFolderPath = "output/" + problemArenaClass.getSimpleName() + "/" + System.currentTimeMillis() + "/";
+		File outputFolder = new File(outputFolderPath);
+		outputFolder.mkdirs();
+		
+		for(Network network : finalWinnerNetworks) {
+			ObjectOutputStream oos = null;
+	        try {
+				FileOutputStream fos = new FileOutputStream(outputFolderPath + "/" + Integer.toHexString(network.hashCode()) + ".network");
+				oos = new ObjectOutputStream(fos);
+				oos.writeObject(network);
+				oos.close();
+			} catch (IOException e) {
+				logger.catching(e);
+			} finally {
+				try{oos.close();} catch(IOException e) {/*nothing to do*/}
+			}
 		}
 	}
 

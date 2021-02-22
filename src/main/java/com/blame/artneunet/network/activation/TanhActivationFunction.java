@@ -1,5 +1,6 @@
 package com.blame.artneunet.network.activation;
 
+@SuppressWarnings("serial")
 public class TanhActivationFunction implements IActivationFunction {
 
 	@Override

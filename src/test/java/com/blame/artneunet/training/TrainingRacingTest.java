@@ -15,7 +15,7 @@ public class TrainingRacingTest {
 		
 		NetworkBuilder networkBuilder = NetworkBuilder.createNetworkBuilder()
 			.setNumberOfInputNeurons(7)
-			.setNumberOfProcessingNeurons(Arrays.asList(4))
+			.setNumberOfProcessingNeurons(Arrays.asList(8, 4))
 			.setNumberOfOutputNeurons(2)
 			.setProcessingActivationFunctionClass(TanhActivationFunction.class)
 			.setOutputActivationFunctionClass(TanhActivationFunction.class);
