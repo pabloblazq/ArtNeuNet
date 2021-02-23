@@ -93,13 +93,14 @@ public class NetworkBuilder {
 	/**
 	 * 
 	 * @param network
+	 * @param mutantFactor 
 	 * @return
 	 */
-	public Network generateMutatedNetwork(Network network) {
+	public Network generateMutatedNetwork(Network network, double mutantFactor) {
 		
 		Network copyNetwork = network.cloneNetwork();
 		copyNetwork.setEnabled(true);
-		copyNetwork.randomizeConnection();
+		copyNetwork.randomizeConnections(mutantFactor);
 		return copyNetwork;
 	}
 }

@@ -12,7 +12,7 @@ import com.blame.artneunet.problemarena.common.Point;
 
 public class RacingCircuit {
 
-	public static final String TRACK_FILE = "/track_01.bmp";
+	public static final String TRACK_FILE = "/track_02_test.bmp";
 
 	private static final Logger logger = LogManager.getLogger(RacingCircuit.class);
 

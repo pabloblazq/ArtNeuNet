@@ -17,6 +17,8 @@ import com.blame.artneunet.problemarena.ProblemArena;
 
 public class Training {
 
+	private static final double MUTANT_FACTOR = 0.1;
+
 	private static final Logger logger = LogManager.getLogger(Training.class);
 	
 	protected static final int TRAINING_STEPS = 100;
@@ -46,12 +48,12 @@ public class Training {
 			// process the training step
 			TrainingStep trainingStep = new TrainingStep(networkList, problemArenaClass, NUM_WINNER_NETWORKS);
 			List<Network> winnerNetworks = trainingStep.processTrainingStep();
-			ProblemArena problemArena = trainingStep.getSampleProblemArena();
 			
 			// display condition
-//			if((trainingStepIteration % 10) == 0 || trainingStepIteration == TRAINING_STEPS -1) {
-//				problemArena.display(winnerNetworks);
-//			}
+			if(/*(trainingStepIteration % 10) == 0 || */trainingStepIteration == TRAINING_STEPS -1) {
+				ProblemArena problemArena = trainingStep.getSampleProblemArena();
+				problemArena.display(winnerNetworks);
+			}
 			
 			// last training step
 			if(trainingStepIteration == TRAINING_STEPS -1) {
@@ -119,7 +121,7 @@ public class Training {
 		
 		List<Network> mutatedNetworks = new ArrayList<>();
 		for(int i = 0; i < NUM_MUTATED_FROM_WINNER_NETWORK; i++) {
-			mutatedNetworks.add(networkBuilder.generateMutatedNetwork(winnerNetwork));
+			mutatedNetworks.add(networkBuilder.generateMutatedNetwork(winnerNetwork, MUTANT_FACTOR));
 		}
 
 		return mutatedNetworks;

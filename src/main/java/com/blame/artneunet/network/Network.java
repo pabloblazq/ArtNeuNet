@@ -153,6 +153,18 @@ public class Network implements Serializable {
 
 	/**
 	 * 
+	 * @param mutantFactor
+	 */
+	public void randomizeConnections(double mutantFactor) {
+		
+		long numConnections = Math.round(connectionList.size() * mutantFactor);
+		for(int i = 0; i < numConnections; i++) {
+			randomizeConnection();
+		}
+	}
+	
+	/**
+	 * 
 	 */
 	public void randomizeConnection() {
 		if(random == null) {
@@ -220,8 +232,9 @@ public class Network implements Serializable {
 		return genealogyItemList;
 	}
 
-	public void setEnabled(boolean enabled) {
+	public Network setEnabled(boolean enabled) {
 		this.enabled = enabled;
+		return this;
 	}
 
 	public boolean isEnabled() {
@@ -286,5 +299,5 @@ public class Network implements Serializable {
 			return false;
 		return true;
 	}
-	
+
 }

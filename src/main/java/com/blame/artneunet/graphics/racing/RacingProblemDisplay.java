@@ -22,6 +22,8 @@ public class RacingProblemDisplay extends ProblemDisplay {
 
 	private static final Logger logger = LogManager.getLogger(RacingProblemDisplay.class);
 
+	protected static final Color COLOR_GRASS = new Color(34, 177, 76); // seems to have changed r by b
+
 	protected List<Network> winnerNetworks;
 	protected Image backgroundImage;
 
@@ -32,6 +34,8 @@ public class RacingProblemDisplay extends ProblemDisplay {
 		} catch (IOException e) {
 			logger.catching(e);
 		}
+		
+		setBackground(COLOR_GRASS);
 		
         setVisible(true);
 	}

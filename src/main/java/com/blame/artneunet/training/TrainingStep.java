@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.blame.artneunet.network.Network;
 import com.blame.artneunet.problemarena.ProblemArena;
+import com.blame.artneunet.problemarena.ProblemArenaFactory;
 
 public class TrainingStep {
 
@@ -40,7 +41,7 @@ public class TrainingStep {
 		
 		for(int arenaIteration = 0; arenaIteration < getNumArenaIterations(); arenaIteration++) {
 			logger.info("Processing problem arena {}", arenaIteration);
-			ProblemArena problemArena = getProblemArenaInstance(problemArenaClass);
+			ProblemArena problemArena = ProblemArenaFactory.getProblemArenaInstance(problemArenaClass, networkList);
 			processProblemArena(problemArena);
 			if(sampleProblemArena == null) {
 				sampleProblemArena = problemArena;
@@ -60,15 +61,6 @@ public class TrainingStep {
 		}
 	}
 
-	protected ProblemArena getProblemArenaInstance(Class<? extends ProblemArena> problemArenaClass) {
-		try {
-			return problemArenaClass.getConstructor(List.class).newInstance(networkList);
-		} catch (ReflectiveOperationException e) {
-			logger.catching(e);
-			return null;
-		}
-	}
-	
 	protected void processProblemArena(ProblemArena problemArena) {
 		
 		Map<Network, Double> resultValuesByNetwork = problemArena.processProblem();
